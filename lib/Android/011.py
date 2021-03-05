@@ -3,7 +3,7 @@ from ..info import Info
 from ..apk import register
 from ..tools import *
 
-TITLE = '测试URL泄露检测'
+TITLE = 'URL泄露检测'
 LEVEL = 1
 INFO = '检测App泄露的URL'
 
