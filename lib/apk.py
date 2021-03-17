@@ -7,7 +7,7 @@ import shutil
 from xml.dom.minidom import parse
 import xml.dom.minidom
 from lib.info import Info
-from lib.tools import randomStr, getAPKFiles
+from lib.tools import randomStr
 
 scanners = {}
 
@@ -34,7 +34,7 @@ from . import Android  # 执行导入包到 scanners
 def apkScan(inputfile):
     # 解压apk包
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
-    strline = 'java -jar ./ThirdTools/apktool.jar d -f ' + inputfile + ' -o ' + filePath + ' --only-main-classes'
+    strline = 'java -jar ./ThirdTools/apktool.jar d -f "' + inputfile + '" -o ' + filePath + ' --only-main-classes'
     subprocess.call(strline, shell=True)
     filePath = os.path.abspath(filePath)
     try:
@@ -44,41 +44,8 @@ def apkScan(inputfile):
 
         for key in scanners.keys():
             c = scanner(key)
-            if c and key == 'ZipCheck':
+            if c:
                 c(filePath).scan()
-        # files = getAPKFiles(filePath)
-        #
-        # resultDir = {}
-        # for file in files:
-        #     mode = 'r'
-        #     if file.endswith('so'):
-        #         mode = 'rb'
-        #     with open(file, mode=mode) as f:
-        #         io = f.read()
-        #         for key in scanners.keys():
-        #             c = scanner(key)
-        #             if c:
-        #                 info = c(inputfile, file, io).scan()
-        #                 if info is not None:
-        #                     if info.key not in resultDir.keys():
-        #                         resultDir[info.key] = [info]
-        #                     else:
-        #                         arr = resultDir[info.key]
-        #                         arr.append(info)
-        #                         resultDir[info.key] = arr
-        # for key in resultDir.keys():
-        #     index = 0
-        #     result = ''
-        #     info = None
-        #     for item in resultDir[key]:
-        #         if index == 0:
-        #             result = item.result
-        #             info = Info(key=key, title=item.title, level=item.level, info=item.info, result=result)
-        #         else:
-        #             result += '\n' + item.result
-        #             info.result = result
-        #         index += 1
-        #     info.description()
     except:
         print(traceback.format_exc())
 

@@ -6,6 +6,14 @@ import string
 import subprocess
 import re
 
+# 文件白名单，如果不需要可以清空，也可以自行添加
+whiteList = ['facebook', 'tencent', 'huawei', 'aliyun', 'android/support', 'xiaomi', 'vivo', 'oppo', 'airbnb', 'amap',
+             'alipay', 'google', 'okhttp3', 'retrofit2', 'mozilla', 'freemarker', 'alibaba', 'qihoo', 'gson', 'jpush',
+             'bugtags', 'trello', 'bumptech', 'jiguang', 'github', 'umeng', 'greenrobot', 'eclipse', 'bugly', 'sina',
+             'weibo', 'j256', 'taobao/weex', 'iflytek', 'androidx', 'meizu', 'io/agora', 'ijkplayer', 'sqlcipher',
+             'cmic/sso', 'shanyan_sdk', 'svgaplayer', 'io/flutter', 'bytedance', 'kotlin', 'org/apache', 'org/aspectj',
+             'baidu', 'youzan', 'jdpaysdk', 'qq', 'kotlinx']
+
 tasks = []
 
 
@@ -36,7 +44,7 @@ class RunCMD:
 
 
 def cmdString(strline):
-    return strline
+    return strline + ' | ' + grepThirdFile()
 
 
 def randomStr(num):
@@ -50,7 +58,8 @@ def getAPKFiles(dir):
     for root, dirs, files in dirlist:
         for file in files:
             path = os.path.join(root, file)
-            if file.endswith('.smali') or file.endswith('.so') or file.endswith('.xml') or file.endswith('.yml') or file.endswith('.html'):
+            if file.endswith('.smali') or file.endswith('.so') or file.endswith('.xml') or file.endswith(
+                    '.yml') or file.endswith('.html'):
                 if '/original/' not in path:
                     filesArray.append(path)
             if file.endswith('.js'):
@@ -83,7 +92,7 @@ def getFileName(path):
 def jsBeautify(jsFiles):
     newFiles = []
     for file in jsFiles:
-        beautifyFile = file[:-3]+'1.js'
+        beautifyFile = file[:-3] + '1.js'
         newFiles.append(beautifyFile)
         strline = 'js-beautify ' + file + ' > ' + beautifyFile
         runner = RunCMD()
@@ -108,3 +117,7 @@ def getURL(line):
     pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
     urls = re.findall(pattern, line[:-1])
     return urls
+
+
+def grepThirdFile():
+    return "grep -v '" + '\|'.join(whiteList) + "'"
