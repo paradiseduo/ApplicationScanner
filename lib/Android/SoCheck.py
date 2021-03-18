@@ -3,7 +3,7 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 
-TITLE = 'So文件破解风险'
+TITLE = 'So文件破解风险检测'
 LEVEL = 2
 INFO = '检测Apk中的so文件是否可被破解读取'
 
