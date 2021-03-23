@@ -10,9 +10,9 @@ import re
 whiteList = ['facebook', 'tencent', 'huawei', 'aliyun', 'android/support', 'xiaomi', 'vivo', 'oppo', 'airbnb', 'amap',
              'alipay', 'google', 'okhttp3', 'retrofit2', 'mozilla', 'freemarker', 'alibaba', 'qihoo', 'gson', 'jpush',
              'bugtags', 'trello', 'bumptech', 'jiguang', 'github', 'umeng', 'greenrobot', 'eclipse', 'bugly', 'sina',
-             'weibo', 'j256', 'taobao/weex', 'iflytek', 'androidx', 'meizu', 'io/agora', 'ijkplayer', 'sqlcipher',
+             'weibo', 'j256', 'taobao/weex', 'iflytek', 'androidx/', 'meizu', 'io/agora', 'ijkplayer', 'sqlcipher',
              'cmic/sso', 'shanyan_sdk', 'svgaplayer', 'io/flutter', 'bytedance', 'kotlin', 'org/apache', 'org/aspectj',
-             'baidu', 'youzan', 'jdpaysdk', 'qq', 'kotlinx']
+             'baidu', 'youzan', 'jdpaysdk', 'qq', 'kotlinx', '/android/']
 
 tasks = []
 
