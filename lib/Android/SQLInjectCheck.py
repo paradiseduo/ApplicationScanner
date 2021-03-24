@@ -11,27 +11,25 @@ INFO = '检测App是否存在SQL注入的利用条件'
 class SQLInjectCheck(Base):
     def scan(self):
         strline = cmdString('grep -r "Landroid/database/sqlite/SQLiteDatabase" ' + self.appPath)
-        arrs = os.popen(strline).readlines()
+        paths = getSmalis(os.popen(strline).readlines())
         results = []
-        for item in arrs:
-            if '.smali:' in item:
-                path = item.split(':')[0]
-                with open(path, 'r') as f:
-                    lines = f.readlines()
-                    count = len(lines)
-                    name = getFileName(path)
-                    for i in range(0, count):
-                        line = lines[i]
-                        if '?' in line and 'const-string' in line:
-                            v = line.strip().split(' ')[1]
-                            for j in range(i, count):
-                                ll = lines[j]
-                                if v in ll and (
-                                        'Landroid/database/sqlite/SQLiteDatabase;->rawQuery' in ll or 'Landroid/database/sqlite/SQLiteDatabase;->execSQL' in ll):
-                                    result = name + ' : ' + str(j + 1)
-                                    if result not in results:
-                                        results.append(result)
-                                    break
+        for path in paths:
+            with open(path, 'r') as f:
+                lines = f.readlines()
+                count = len(lines)
+                name = getFileName(path)
+                for i in range(0, count):
+                    line = lines[i]
+                    if '?' in line and 'const-string' in line:
+                        v = line.strip().split(' ')[1]
+                        for j in range(i, count):
+                            ll = lines[j]
+                            if v in ll and (
+                                    'Landroid/database/sqlite/SQLiteDatabase;->rawQuery' in ll or 'Landroid/database/sqlite/SQLiteDatabase;->execSQL' in ll):
+                                result = name + ' : ' + str(j + 1)
+                                if result not in results:
+                                    results.append(result)
+                                break
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()
 
 
