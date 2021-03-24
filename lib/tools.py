@@ -82,8 +82,6 @@ def getFileName(path):
                 start = i
             if start != -1 and start != i:
                 dir += items[i] + '.'
-        if '$' in dir:
-            return dir[:-1].split('$')[0] + '.smali'
         return dir[:-1]
     else:
         return ''
@@ -121,3 +119,13 @@ def getURL(line):
 
 def grepThirdFile():
     return "grep -v '" + '\|'.join(whiteList) + "'"
+
+
+def getSmalis(arrs):
+    paths = []
+    for item in arrs:
+        if '.smali:' in item:
+            path = item.split(':')[0]
+            if path not in paths:
+                paths.append(path)
+    return paths
