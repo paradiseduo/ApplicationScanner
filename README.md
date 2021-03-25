@@ -45,6 +45,8 @@ Usage:
 ## Example
 You can download [test.apk](https://github.com/paradiseduo/paradiseduo/raw/master/test.apk) have a try.
 
+**Reuslt format is filename : line number**
+
 ```bash
 > python3 AppScanner.py -i test.apk
 
