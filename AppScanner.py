@@ -27,29 +27,33 @@ Usage:
 
     -h help
     -i <inputPath>
+    -s save cache (Default clear cache)
 '''
 
 
 def main(argv):
     inputfile = ''
     try:
-        opts, args = getopt.getopt(argv, "hi:", ["ipath="])
+        opts, args = getopt.getopt(argv, "hsi:", ["ipath="])
     except getopt.GetoptError:
         termcolor.cprint(help, 'green')
         sys.exit(2)
 
+    save = False
     for (opt, arg) in opts:
         if opt == '-h':
             termcolor.cprint(help, 'green')
             sys.exit()
         elif opt in ("-i", "--ipath"):
             inputfile = arg
+        elif opt == '-s':
+            save = True
 
     if len(inputfile) > 0:
         if '.apk' in inputfile:
-            apkScan(inputfile)
+            apkScan(inputfile, save)
         elif '.ipa' in inputfile:
-            ipaScan(inputfile)
+            ipaScan(inputfile, save)
         else:
             termcolor.cprint('Application must be *.apk or *.ipa', 'red')
             sys.exit(2)

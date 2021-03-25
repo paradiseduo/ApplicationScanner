@@ -31,7 +31,7 @@ def import_scanners(scanners_imports):
 from . import Android  # 执行导入包到 scanners
 
 
-def apkScan(inputfile):
+def apkScan(inputfile, save):
     # 解压apk包
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
     strline = 'java -jar ./ThirdTools/apktool.jar d -f "' + inputfile + '" -o ' + filePath + ' --only-main-classes'
@@ -49,7 +49,8 @@ def apkScan(inputfile):
     except:
         print(traceback.format_exc())
 
-    shutil.rmtree(filePath)
+    if not save:
+        shutil.rmtree(filePath)
     
 
 def appSign(filePath):
