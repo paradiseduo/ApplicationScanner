@@ -177,8 +177,8 @@ def iOSAuthority(filePath):
         for i in range(0, len(arr)):
             item = arr[i]
             if 'UsageDescription' in item:
-                item = item.replace('<key>', '').replace('</key>', '')
-                itemNext = arr[i+1].replace('<string>', '').replace('</string>', '')
+                item = item.replace('<key>', '').replace('</key>', '').strip()
+                itemNext = arr[i+1].replace('<string>', '').replace('</string>', '').strip()
                 results.append(item + ":" + itemNext)
     elif platform.system() == 'Darwin':
         strline = "/usr/libexec/PlistBuddy -c 'Print' " + filePath
