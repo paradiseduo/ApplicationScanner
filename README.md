@@ -22,6 +22,12 @@ Usage:
 ## Requirement
 * Only support Mac/Linux, no Windows version.
 * Make sure have python3.x and Java 11 installed in your computer.
+* Install libplist (Only Linux Require)
+	```bash
+	yum install libplist-devel libplist
+	or
+	apt install libplist-utils
+	```
 * Install js-beautify
 
 	```bash
