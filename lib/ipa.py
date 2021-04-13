@@ -98,13 +98,13 @@ def getIPAFiles(dir):
 
 
 def classDump(filePath, appBinPath):
-    strline = 'strings -a ' + appBinPath + " > " + os.path.abspath(filePath) + '/StringDump'
+    strline = 'strings -a -T Mach-O ' + appBinPath + " > " + os.path.abspath(filePath) + '/StringDump'
     subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    strline = 'strings -a ' + appBinPath + " | grep ']$' | grep '^-\[\|^+\[' > " + os.path.abspath(filePath) + '/ClassDump'
+    strline = 'strings -a -T Mach-O ' + appBinPath + " | grep ']$' | grep '^-\[\|^+\[' > " + os.path.abspath(filePath) + '/ClassDump'
     subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    strline = 'strings -a ' + appBinPath + " | grep '^http://\|^https://' > " + os.path.abspath(filePath) + '/URLDump'
+    strline = 'strings -a -T Mach-O ' + appBinPath + " | grep '^http://\|^https://' > " + os.path.abspath(filePath) + '/URLDump'
     subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    strline = 'strings -a ' + appBinPath + " | grep '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' > " + os.path.abspath(filePath) + '/IPDump'
+    strline = 'strings -a -T Mach-O ' + appBinPath + " | grep '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' > " + os.path.abspath(filePath) + '/IPDump'
     subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     iOSMachO(appBinPath, filePath)
 
@@ -154,7 +154,7 @@ def iOSMachO(appBinPath, filePath):
 
 def iOSRpath(binPath):
     results = []
-    p = subprocess.Popen('strings -a ' + binPath + '| grep @rpath | grep -v libswift', shell=True, stdout=subprocess.PIPE)
+    p = subprocess.Popen('strings -a -T Mach-O ' + binPath + '| grep @rpath | grep -v libswift', shell=True, stdout=subprocess.PIPE)
     aa = p.communicate()[0].decode('utf-8', 'ignore')
     arr = aa.split('\n')
     for line in arr:

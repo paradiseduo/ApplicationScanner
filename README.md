@@ -22,6 +22,11 @@ Usage:
 ## Requirement
 * Only support Mac/Linux, no Windows version.
 * Make sure have python3.x and Java 11 installed in your computer.
+* install binutils (Only Mac Require)
+   ```bash
+    Mac:
+    brew install binutils
+   ```
 * Install libplist (Only Linux Require)
 	```bash
 	yum install libplist-devel libplist
