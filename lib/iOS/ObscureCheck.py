@@ -12,8 +12,6 @@ blackList = ['Login', 'Helper', 'Manager']
 class ObscureCheck(Base):
     def scan(self):
         results = []
-        # 不知道为什么，只要不sleep就读不到文件，哪怕文件存在
-        time.sleep(0.5)
         with open(self.appPath+'/ClassDump', 'r') as f:
             lines = f.readlines()
             for line in lines:

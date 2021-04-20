@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
+import plistlib
 import shutil
 import termcolor
 import os
@@ -41,13 +42,14 @@ def ipaScan(filePath, save):
     appInfoPath = filePath + '/' + appName + '/' + 'Info.plist'
     termcolor.cprint('Finish', 'green')
     try:
-        termcolor.cprint('ClassDump ' + appBinPath, 'white')
-        classDump(filePath, appBinPath)
-        termcolor.cprint('Finish', 'green')
+        iOSInfo(appInfoPath)
         iOSAuthority(appInfoPath)
-        iOSRpath(appBinPath)
-        # files = getIPAFiles(filePath)
-        # for file in files:
+        iOSCert(appInfoPath, filePath, appBinPath)
+        termcolor.cprint('Reverse ' + appBinPath, 'white')
+        reverse(filePath, appBinPath)
+        termcolor.cprint('Finish', 'green')
+        iOSMachO(appBinPath, filePath)
+        iOSRpath(filePath + '/RpathDump')
         for key in scanners.keys():
             c = scanner(key)
             if c:
@@ -97,20 +99,44 @@ def getIPAFiles(dir):
     return filesArray
 
 
-def classDump(filePath, appBinPath):
-    strline = 'strings -a -T Mach-O ' + appBinPath + " > " + os.path.abspath(filePath) + '/StringDump'
-    subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    strline = 'strings -a -T Mach-O ' + appBinPath + " | grep ']$' | grep '^-\[\|^+\[' > " + os.path.abspath(filePath) + '/ClassDump'
-    subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    strline = 'strings -a -T Mach-O ' + appBinPath + " | grep '^http://\|^https://' > " + os.path.abspath(filePath) + '/URLDump'
-    subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    strline = 'strings -a -T Mach-O ' + appBinPath + " | grep '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' > " + os.path.abspath(filePath) + '/IPDump'
-    subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    iOSMachO(appBinPath, filePath)
+def iOSInfo(appInfoPath):
+    results = []
+    with open(appInfoPath, 'rb') as fp:
+        pl = plistlib.load(fp)
+    results.append('App名称:' + pl['CFBundleDisplayName'])
+    results.append('Bundle Identifier:' + pl['CFBundleIdentifier'])
+    results.append('包版本:' + pl['CFBundleShortVersionString'])
+    results.append('编译版本:' + pl['CFBundleVersion'])
+    results.append('SDK版本:' + pl['DTSDKName'])
+    results.append('最低系统版本:' + pl['MinimumOSVersion'])
+    Info(key='Info', title='APP基本信息', level=0, info='APP的基本信息', result="\n".join(results)).description()
+
+
+def reverse(filePath, appBinPath):
+    stringDumpPath = os.path.abspath(filePath) + '/StringDump'
+    strline1 = 'strings -a -T Mach-O ' + appBinPath + " > " + stringDumpPath
+    strline2 = 'cat ' + stringDumpPath + " | grep ']$' | grep '^-\[\|^+\[' > " + os.path.abspath(
+        filePath) + '/ClassDump'
+    strline3 = 'cat ' + stringDumpPath + " | grep '^http://\|^https://' > " + os.path.abspath(filePath) + '/URLDump'
+    strline4 = 'cat ' + stringDumpPath + " | grep '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' > " + os.path.abspath(
+        filePath) + '/IPDump'
+    strline5 = 'cat ' + stringDumpPath + " | grep @rpath | grep -v libswift > " + os.path.abspath(
+        filePath) + '/RpathDump'
+    cmds = [strline1, strline2, strline3, strline4, strline5]
+    for strline in cmds:
+        runner = RunCMD()
+        runner.cmd = strline
+        runner.run_cmd()
+    while len(tasks) > 0:
+        for i, item in enumerate(tasks):
+            item.is_running
 
 
 def iOSMachO(appBinPath, filePath):
     macho = lief.MachO.parse(appBinPath, config=lief.MachO.ParserConfig.quick)
+    cpuType = ''
+    for i in range(0, len(macho)):
+        cpuType += macho[i].header.cpu_type.name + ','
     macho = macho.at(0)
 
     stk_check = '___stack_chk_fail'
@@ -137,6 +163,7 @@ def iOSMachO(appBinPath, filePath):
         signatrue = str(item.command)
 
     dic = {
+        'cpu_type': cpuType[:-1],
         'name': macho.name,
         'has_nx': macho.has_nx,
         'has_pie': macho.is_pie,
@@ -148,45 +175,76 @@ def iOSMachO(appBinPath, filePath):
         'signatrue': signatrue
     }
 
-    with open(filePath+'/macho.json', mode='w') as f:
+    with open(filePath + '/macho.json', mode='w') as f:
         json.dump(dic, f)
 
 
 def iOSRpath(binPath):
     results = []
-    p = subprocess.Popen('strings -a -T Mach-O ' + binPath + '| grep @rpath | grep -v libswift', shell=True, stdout=subprocess.PIPE)
-    aa = p.communicate()[0].decode('utf-8', 'ignore')
-    arr = aa.split('\n')
+    with open(binPath, 'r') as f:
+        arr = f.readlines()
     for line in arr:
+        line = line.strip()
         if len(line) > 1 and line not in results:
             framework = line.split('/')[1]
             results.append(framework)
     Info(key='Info', title='三方库列表', level=0, info='查看应用使用的所有三方库', result="\n".join(results)).description()
 
 
-def iOSAuthority(filePath):
+def iOSAuthority(appInfoPath):
     results = []
-    if platform.system() == 'Linux':
-        if 'Debian' in platform.uname().version:
-            strline = "plistutil -i " + filePath + " -f xml"
-        elif 'centos' in platform.uname().version:
-            strline = "plistutil -i " + filePath
-        p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out = p.communicate()[0].decode('utf-8', 'ignore')
-        arr = out.split('\n')
-        for i in range(0, len(arr)):
-            item = arr[i]
-            if 'UsageDescription' in item:
-                item = item.replace('<key>', '').replace('</key>', '').strip()
-                itemNext = arr[i+1].replace('<string>', '').replace('</string>', '').strip()
-                results.append(item + ":" + itemNext)
-    elif platform.system() == 'Darwin':
-        strline = "/usr/libexec/PlistBuddy -c 'Print' " + filePath
-        p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out = p.communicate()[0].decode('utf-8', 'ignore')
-        arr = out.split('\n')
-        for item in arr:
-            if 'Description' in item:
-                ar = item.split('=')
-                results.append(ar[0].strip() + ':' + ar[1].strip())
+    with open(appInfoPath, 'rb') as fp:
+        pl = plistlib.load(fp)
+    for key in pl.keys():
+        if 'UsageDescription' in key:
+            results.append(key + ":" + pl[key])
     Info(key='Info', title='应用权限列表', level=0, info='查看应用使用的所有权限', result="\n".join(results)).description()
+
+
+def iOSCert(appInfoPath, filePath, appBinPath):
+    results = []
+    if platform.system() == 'Darwin':
+        strline = 'codesign -vv -d ' + appBinPath
+        p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = p.communicate()[1].decode('utf-8', 'ignore')
+        Info(key='Info', title='iOS证书信息', level=0, info='应用打包使用的证书信息', result=result).description()
+    else:
+        results.append('Executable=' + appBinPath)
+        with open(appInfoPath, 'rb') as fp:
+            pl = plistlib.load(fp)
+        for key in pl.keys():
+            if 'CFBundleIdentifier' == key:
+                results.append('Identifier=' + pl[key])
+        with open(filePath + '/macho.json', 'r') as f:
+            dic = json.loads(f.read())
+            if ',' in dic['cpu_type']:
+                results.append('Format=app bundle with Mach-O universal (' + dic['cpu_type'].replace(',', ' ') + ')')
+            else:
+                results.append('Format=Mach-O thin (' + dic['cpu_type'] + ')')
+        teamID = ''
+        result = ''
+        with open(filePath + '/StringDump', 'r') as f:
+            arr = f.readlines()
+            for i, line in enumerate(arr):
+                line = line.strip()
+                if 'Apple iPhone OS Application Signing' in line and 'Apple iPhone OS Application Signing' not in result:
+                    result += 'Authority=Apple iPhone OS Application Signing\n'
+                    results.append('Authority=Apple iPhone OS Application Signing')
+                if 'Apple iPhone Certification Authority' in line and 'Apple iPhone Certification Authority' not in result:
+                    result += 'Authority=Apple iPhone Certification Authority\n'
+                    results.append('Authority=Apple iPhone Certification Authority')
+                if 'Apple Distribution:' in line and 'Apple Distribution:' not in result:
+                    line = line.strip()
+                    start = line.find('Apple Distribution:')
+                    end = line.find(')', len(line) - 12)
+                    result += 'Authority=' + line[start:end] + '\n'
+                    results.append('Authority=' + line[start:end])
+                if 'Apple Worldwide Developer Relations Certification Authority' in line and 'Apple Worldwide Developer Relations Certification Authority' not in result:
+                    result += 'Authority=Apple Worldwide Developer Relations Certification Authority\n'
+                    results.append('Authority=Apple Worldwide Developer Relations Certification Authority')
+                if '<key>com.apple.developer.team-identifier</key>' in line:
+                    teamID = arr[i + 1].replace('<string>', '').replace('</string>', '')
+        results.append('Authority=Apple Root CA')
+        if teamID != '':
+            results.append('TeamIdentifier=' + teamID.strip())
+        Info(key='Info', title='iOS证书信息', level=0, info='应用打包使用的证书信息', result="\n".join(results)).description()

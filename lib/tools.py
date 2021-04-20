@@ -1,12 +1,10 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-import platform
 import random
 import os
 import string
 import subprocess
 import re
-import json
 
 # 文件白名单，如果不需要可以清空，也可以自行添加
 whiteList = ['facebook', 'tencent', 'huawei', 'aliyun', 'android/support', 'xiaomi', 'vivo', 'oppo', 'airbnb', 'amap',

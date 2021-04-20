@@ -3,6 +3,7 @@
 import termcolor
 import getopt
 import sys
+import os
 from lib.apk import apkScan
 from lib.ipa import ipaScan
 
@@ -50,6 +51,9 @@ def main(argv):
             save = True
 
     if len(inputfile) > 0:
+        if not os.path.exists(inputfile):
+            termcolor.cprint('File not exist!', 'red')
+            sys.exit(0)
         if '.apk' in inputfile:
             apkScan(inputfile, save)
         elif '.ipa' in inputfile:
@@ -57,7 +61,6 @@ def main(argv):
         else:
             termcolor.cprint('Application must be *.apk or *.ipa', 'red')
             sys.exit(2)
-        sys.exit()
     else:
         termcolor.cprint(help, 'green')
         sys.exit(2)
