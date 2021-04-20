@@ -35,7 +35,7 @@ from . import iOS  # 执行导入包到 scanners
 
 def ipaScan(filePath, save):
     # 解压ipa文件
-    termcolor.cprint('Unzip ' + filePath, 'white')
+    termcolor.cprint('Unzip ipa ' + filePath, 'magenta')
     filePath, appName = ipatool(filePath)
     appBinName = appName.replace('.app', '')
     appBinPath = filePath + '/' + appName + '/' + appBinName
@@ -45,7 +45,7 @@ def ipaScan(filePath, save):
         iOSInfo(appInfoPath)
         iOSAuthority(appInfoPath)
         iOSCert(appInfoPath, filePath, appBinPath)
-        termcolor.cprint('Reverse ' + appBinPath, 'white')
+        termcolor.cprint('Reverse ' + appBinPath, 'magenta')
         reverse(filePath, appBinPath)
         termcolor.cprint('Finish', 'green')
         iOSMachO(appBinPath, filePath)
@@ -58,7 +58,9 @@ def ipaScan(filePath, save):
         import traceback
         print(traceback.format_exc())
     if not save:
+        termcolor.cprint('\nClean cache...', 'magenta')
         shutil.rmtree(filePath)
+        termcolor.cprint('Finish', 'green')
 
 
 def ipatool(inputfile):

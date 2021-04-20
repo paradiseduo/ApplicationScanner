@@ -30,7 +30,7 @@ class DexLoadCheck(Base):
                         for j in range(i, count):
                             ll = lines[j]
                             llnext = lines[j]
-                            if j+1 <= count:
+                            if j+1 < count:
                                 llnext = lines[j+1]
                             if 'Landroid/os/Environment;->getExternalStorageDirectory' in ll:
                                 if '.local' in llnext and v in llnext and 'Ljava/lang/String;' in llnext:
