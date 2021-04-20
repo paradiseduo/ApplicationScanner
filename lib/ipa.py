@@ -53,7 +53,7 @@ def ipaScan(filePath, save):
         for key in scanners.keys():
             c = scanner(key)
             if c:
-                c(filePath).scan()
+                c(filePath, appBinPath).scan()
     except:
         import traceback
         print(traceback.format_exc())

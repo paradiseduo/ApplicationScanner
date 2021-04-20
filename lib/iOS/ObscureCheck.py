@@ -1,7 +1,6 @@
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-import time
 
 TITLE = '代码未混淆风险检测'
 LEVEL = 1
