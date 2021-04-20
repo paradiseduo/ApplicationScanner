@@ -10,7 +10,7 @@
          | |   | |
          |_|   |_|
 
-                             By ParadiseDuo  [Version: 1.0]
+                             By ParadiseDuo  [Version: 2.0]
 
 Usage:
     python3 AppScanner.py -i *.apk/*.ipa
@@ -64,7 +64,7 @@ You can download [test.apk](https://github.com/paradiseduo/paradiseduo/raw/maste
          | |   | |
          |_|   |_|
 
-                             By ParadiseDuo  [Version: 1.0]
+                             By ParadiseDuo  [Version: 2.0]
 I: Using Apktool 2.5.0 on test.apk
 I: Loading resource table...
 I: Decoding AndroidManifest.xml with resources...
@@ -150,6 +150,3 @@ com.hijack.demo.hijack.SocketServer.smali TCP : 31
 扫描结果:
 com.hijack.demo.hijack.MyWebView.smali : 129
 ```
-
-## Next Step
-iOS scan coming soon...
