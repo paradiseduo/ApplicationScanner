@@ -7,7 +7,7 @@ import os
 from lib.apk import apkScan
 from lib.ipa import ipaScan
 
-Version = 1.0
+Version = 2.0
 
 termcolor.cprint('''
                       _____                                 
