@@ -27,12 +27,6 @@ Usage:
     Mac:
     brew install binutils
    ```
-* Install libplist (Only Linux Require)
-	```bash
-	yum install libplist-devel libplist
-	or
-	apt install libplist-utils
-	```
 * Install js-beautify
 
 	```bash
