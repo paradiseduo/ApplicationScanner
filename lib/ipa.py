@@ -2,9 +2,6 @@
 # -*- coding:utf-8 -*-
 import plistlib
 import shutil
-import termcolor
-import os
-import subprocess
 import lief
 import json
 import platform
@@ -12,7 +9,6 @@ from lib.tools import *
 from lib.info import Info
 
 scanners = {}
-
 
 def register(scanner_class):
     scanners[scanner_class.__name__] = scanner_class
@@ -35,19 +31,19 @@ from . import iOS  # 执行导入包到 scanners
 
 def ipaScan(filePath, save):
     # 解压ipa文件
-    termcolor.cprint('Unzip ipa ' + filePath, 'magenta')
+    console.print('[magenta]Unzip ipa [/magenta][bold magenta]' + filePath + '[/bold magenta]')
     filePath, appName = ipatool(filePath)
     appBinName = appName.replace('.app', '')
     appBinPath = filePath + '/' + appName + '/' + appBinName
     appInfoPath = filePath + '/' + appName + '/' + 'Info.plist'
-    termcolor.cprint('Finish', 'green')
+    console.print('[bold green]Finish[/bold green]')
     try:
         iOSInfo(appInfoPath)
         iOSAuthority(appInfoPath)
         iOSCert(appInfoPath, filePath, appBinPath)
-        termcolor.cprint('Reverse ' + appBinPath, 'magenta')
+        console.print('[magenta]Reverse [/magenta][bold magenta]' + appBinPath + '[/bold magenta]')
         reverse(filePath, appBinPath)
-        termcolor.cprint('Finish', 'green')
+        console.print('[bold green]Finish[/bold green]')
         iOSMachO(appBinPath, filePath)
         iOSRpath(filePath + '/RpathDump')
         for key in scanners.keys():
@@ -58,9 +54,9 @@ def ipaScan(filePath, save):
         import traceback
         print(traceback.format_exc())
     if not save:
-        termcolor.cprint('\nClean cache...', 'magenta')
+        console.print('\n[bold magenta]Clean cache...[/bold magenta]')
         shutil.rmtree(filePath)
-        termcolor.cprint('Finish', 'green')
+        console.print('[bold green]Finish[/bold green]')
 
 
 def ipatool(inputfile):

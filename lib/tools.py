@@ -5,6 +5,10 @@ import os
 import string
 import subprocess
 import re
+from rich.console import Console
+
+
+console = Console()
 
 # 文件白名单，如果不需要可以清空，也可以自行添加
 whiteList = ['facebook', 'tencent', 'huawei', 'aliyun', 'android/support', 'xiaomi', 'vivo', 'oppo', 'airbnb', 'amap',

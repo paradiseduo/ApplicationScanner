@@ -7,8 +7,7 @@ import shutil
 from xml.dom.minidom import parse
 import xml.dom.minidom
 from lib.info import Info
-from lib.tools import randomStr
-import termcolor
+from lib.tools import *
 
 scanners = {}
 
@@ -34,11 +33,11 @@ from . import Android  # 执行导入包到 scanners
 
 def apkScan(inputfile, save):
     # 解压apk包
-    termcolor.cprint('Unzip apk ' + inputfile, 'magenta')
+    console.print('[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
     strline = 'java -jar ./ThirdTools/apktool.jar d -f "' + inputfile + '" -o ' + filePath + ' --only-main-classes'
     subprocess.Popen(strline, shell=True).communicate()
-    termcolor.cprint('Finish', 'green')
+    console.print('[bold green]Finish[/bold green]')
     filePath = os.path.abspath(filePath)
     try:
         apkInfo(filePath)
@@ -54,9 +53,9 @@ def apkScan(inputfile, save):
         print(traceback.format_exc())
 
     if not save:
-        termcolor.cprint('\nClean cache...', 'magenta')
+        console.print('\n[bold magenta]Clean cache...[/bold magenta]')
         shutil.rmtree(filePath)
-        termcolor.cprint('Finish', 'green')
+        console.print('[bold green]Finish[/bold green]')
     
 
 def appSign(filePath):

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-import termcolor
+from lib.tools import *
+from rich.table import Table
 
 LEVEL = {
     0: '信息',
@@ -18,7 +19,7 @@ class Info:
         self.info = info
         self.result = result
         self.key = key
-    
+
     def description(self):
         if len(self.result) > 0:
             levelColor = 'white'
@@ -28,7 +29,11 @@ class Info:
                 levelColor = 'magenta'
             elif self.level == 3 or self.level == 4:
                 levelColor = 'red'
-            termcolor.cprint('\n检测项目: ' + self.title, 'green')
-            termcolor.cprint('项目描述: ' + self.info, 'yellow')
-            termcolor.cprint('危险等级: ' + LEVEL[self.level], levelColor)
-            termcolor.cprint('扫描结果: \n' + self.result, 'white')
+            table = Table(show_header=False, show_lines=True)
+            table.add_column("Title", justify="left")
+            table.add_column("Result", justify="left")
+            table.add_row("检测项目", '[bold green]' + self.title + '[/bold green]')
+            table.add_row("项目描述", '[bold yellow]' + self.info + '[/bold yellow]')
+            table.add_row("危险等级", '[bold ' + levelColor + ']' + LEVEL[self.level] + '[/bold ' + levelColor + ']')
+            table.add_row("项目描述", '[bold]' + self.result + '[/bold]')
+            console.print(table)
