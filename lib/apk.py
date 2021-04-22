@@ -33,7 +33,7 @@ from . import Android  # 执行导入包到 scanners
 
 def apkScan(inputfile, save):
     # 解压apk包
-    console.print('[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
+    console.print('\n[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
     strline = 'java -jar ./ThirdTools/apktool.jar d -f "' + inputfile + '" -o ' + filePath + ' --only-main-classes'
     subprocess.Popen(strline, shell=True).communicate()

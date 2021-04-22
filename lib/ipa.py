@@ -31,7 +31,7 @@ from . import iOS  # 执行导入包到 scanners
 
 def ipaScan(filePath, save):
     # 解压ipa文件
-    console.print('[magenta]Unzip ipa [/magenta][bold magenta]' + filePath + '[/bold magenta]')
+    console.print('\n[magenta]Unzip ipa [/magenta][bold magenta]' + filePath + '[/bold magenta]')
     filePath, appName = ipatool(filePath)
     appBinName = appName.replace('.app', '')
     appBinPath = filePath + '/' + appName + '/' + appBinName
