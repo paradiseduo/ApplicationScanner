@@ -3,7 +3,7 @@ from ..info import Info
 from ..tools import *
 from ..apk import register
 
-TITLE = 'PendingIntent错误使用Intent风险'
+TITLE = 'PendingIntent错误使用Intent风险检测'
 LEVEL = 1
 INFO = '检测App中是否存在PendingIntent使用了隐式Intent或者空Intent的风险'
 

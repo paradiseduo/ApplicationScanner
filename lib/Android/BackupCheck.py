@@ -4,7 +4,7 @@ from ..info import Info
 from ..apk import register
 import os
 
-TITLE = '应用数据任意备份风险'
+TITLE = '应用数据任意备份风险检测'
 LEVEL = 2
 INFO = '检测App是否存在应用数据被任意备份的风险'
 

@@ -3,7 +3,7 @@ from ..info import Info
 from ..tools import *
 from ..apk import register
 
-TITLE = 'Intent组件隐式调用风险'
+TITLE = 'Intent组件隐式调用风险检测'
 LEVEL = 1
 INFO = '检测Apk中的Intent组件是否存在隐式调用的风险'
 
