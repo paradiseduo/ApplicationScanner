@@ -40,12 +40,12 @@ def ipaScan(filePath, save):
     try:
         iOSInfo(appInfoPath)
         iOSAuthority(appInfoPath)
-        iOSCert(appInfoPath, filePath, appBinPath)
         console.print('[magenta]Reverse [/magenta][bold magenta]' + appBinPath + '[/bold magenta]')
         reverse(filePath, appBinPath)
         console.print('[bold green]Finish[/bold green]')
         iOSMachO(appBinPath, filePath)
         iOSRpath(filePath + '/RpathDump')
+        iOSCert(appInfoPath, filePath, appBinPath)
         for key in scanners.keys():
             c = scanner(key)
             if c:
