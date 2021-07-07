@@ -113,6 +113,8 @@ def iOSInfo(appInfoPath):
 def reverse(filePath, appBinPath):
     stringDumpPath = os.path.abspath(filePath) + '/StringDump'
     strline1 = 'strings -a -T Mach-O ' + appBinPath + " > " + stringDumpPath
+    if platform.system() == 'Darwin':
+        strline1 = 'strings -a ' + appBinPath + " > " + stringDumpPath
     strline2 = 'cat ' + stringDumpPath + " | grep ']$' | grep '^-\[\|^+\[' > " + os.path.abspath(
         filePath) + '/ClassDump'
     strline3 = 'cat ' + stringDumpPath + " | grep '^http://\|^https://' > " + os.path.abspath(filePath) + '/URLDump'
