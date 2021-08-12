@@ -267,3 +267,9 @@ Finish
 Clean cache...
 Finish
 ```
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/paradiseduo/ApplicationScanner.svg)](https://starchart.cc/paradiseduo/ApplicationScanner)
+
