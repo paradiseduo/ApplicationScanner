@@ -273,3 +273,6 @@ Finish
 
 [![Stargazers over time](https://starchart.cc/paradiseduo/ApplicationScanner.svg)](https://starchart.cc/paradiseduo/ApplicationScanner)
 
+## License
+
+This software is released under the GPL-3.0 license.
