@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-import subprocess
-import os
 import traceback
 import shutil
 from xml.dom.minidom import parse

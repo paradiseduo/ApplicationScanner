@@ -3,6 +3,8 @@
 import getopt
 import sys
 import os
+
+from lib import translation
 from lib.apk import apkScan
 from lib.ipa import ipaScan
 from lib.tools import console
@@ -22,7 +24,6 @@ console.print('''
 
 console.print('                             [italic green]ParadiseDuo[/italic green]  [{}]'.format(Version))
 
-
 def printUse():
     console.print('''
     Usage:      
@@ -31,13 +32,17 @@ def printUse():
         -h help
         -i <inputPath>
         -s save cache (Default clear cache)
+        -l language ['zh', 'en'] (Default zh)
     ''', style='green')
 
+
+translation.init()
+translation.changeLanguage('zh')
 
 def main(argv):
     inputfile = ''
     try:
-        opts, args = getopt.getopt(argv, "hsi:", ["ipath="])
+        opts, args = getopt.getopt(argv, "hsi:l:", ["ipath=language="])
     except getopt.GetoptError:
         printUse()
         sys.exit(2)
@@ -49,6 +54,8 @@ def main(argv):
             sys.exit()
         elif opt in ("-i", "--ipath"):
             inputfile = arg
+        elif opt in ("-l", "--language"):
+            translation.changeLanguage(arg)
         elif opt == '-s':
             save = True
 

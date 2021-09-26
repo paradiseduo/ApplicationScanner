@@ -7,6 +7,7 @@ import json
 import platform
 from lib.tools import *
 from lib.info import Info
+from lib.translation import *
 
 scanners = {}
 
@@ -101,13 +102,25 @@ def iOSInfo(appInfoPath):
     results = []
     with open(appInfoPath, 'rb') as fp:
         pl = plistlib.load(fp)
-    results.append('App名称:' + pl['CFBundleDisplayName'])
-    results.append('Bundle Identifier:' + pl['CFBundleIdentifier'])
-    results.append('包版本:' + pl['CFBundleShortVersionString'])
-    results.append('编译版本:' + pl['CFBundleVersion'])
-    results.append('SDK版本:' + pl['DTSDKName'])
-    results.append('最低系统版本:' + pl['MinimumOSVersion'])
-    Info(key='Info', title='APP基本信息', level=0, info='APP的基本信息', result="\n".join(results)).description()
+
+    set_values_for_key(key='CFBundleDisplayName', zh='App名称: ', en='Application Name: ')
+    set_values_for_key(key='CFBundleIdentifier', zh='Bundle Identifier: ', en='Bundle Identifier: ')
+    set_values_for_key(key='CFBundleShortVersionString', zh='包版本: ', en='Package Version: ')
+    set_values_for_key(key='CFBundleVersion', zh='编译版本: ', en='Build Version: ')
+    set_values_for_key(key='DTSDKName', zh='SDK版本: ', en='SDK version: ')
+    set_values_for_key(key='MinimumOSVersion', zh='最低系统版本: ', en='Minimum system version: ')
+
+    results.append(get_value('CFBundleDisplayName') + pl['CFBundleDisplayName'])
+    results.append(get_value('CFBundleIdentifier') + pl['CFBundleIdentifier'])
+    results.append(get_value('CFBundleShortVersionString') + pl['CFBundleShortVersionString'])
+    results.append(get_value('CFBundleVersion') + pl['CFBundleVersion'])
+    results.append(get_value('DTSDKName') + pl['DTSDKName'])
+    results.append(get_value('MinimumOSVersion') + pl['MinimumOSVersion'])
+
+    set_values_for_key(key='BaseTitle', zh='APP基本信息', en='Application essential information')
+    set_values_for_key(key='BaseInfo', zh='APP的基本信息', en='Application\'s essential information')
+
+    Info(key='Info', title=get_value('BaseTitle'), level=0, info=get_value('BaseInfo'), result="\n".join(results)).description()
 
 
 def reverse(filePath, appBinPath):
@@ -188,7 +201,9 @@ def iOSRpath(binPath):
         if len(line) > 1 and line not in results:
             framework = line.split('/')[1]
             results.append(framework)
-    Info(key='Info', title='三方库列表', level=0, info='查看应用使用的所有三方库', result="\n".join(results)).description()
+    set_values_for_key(key='THIRDLIST', zh='三方库列表', en='Thrid library list')
+    set_values_for_key(key='THIRDLISTINFO', zh='查看应用使用的所有三方库', en='View all third libraries used by the application')
+    Info(key='Info', title=get_value('THIRDLIST'), level=0, info=get_value('THIRDLISTINFO'), result="\n".join(results)).description()
 
 
 def iOSAuthority(appInfoPath):
@@ -198,16 +213,21 @@ def iOSAuthority(appInfoPath):
     for key in pl.keys():
         if 'UsageDescription' in key:
             results.append(key + ":" + pl[key])
-    Info(key='Info', title='应用权限列表', level=0, info='查看应用使用的所有权限', result="\n".join(results)).description()
+    set_values_for_key(key='APPPERMISSIONSLIST', zh='应用权限列表', en='App permissions list')
+    set_values_for_key(key='APPPERMISSIONSLISTINFO', zh='查看应用使用的所有权限', en='View all permissions used by the app')
+    Info(key='Info', title=get_value('APPPERMISSIONSLIST'), level=0, info=get_value('APPPERMISSIONSLISTINFO'), result="\n".join(results)).description()
 
 
 def iOSCert(appInfoPath, filePath, appBinPath):
     results = []
+    set_values_for_key(key='IOSCERTIFICATEINFORMATION', zh='iOS证书信息', en='iOS certificate information')
+    set_values_for_key(key='IOSCERTIFICATEINFORMATIONINFO', zh='应用打包使用的证书信息',
+                       en='Certificate information used for application packaging')
     if platform.system() == 'Darwin':
         strline = 'codesign -vv -d ' + appBinPath
         p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         result = p.communicate()[1].decode('utf-8', 'ignore')
-        Info(key='Info', title='iOS证书信息', level=0, info='应用打包使用的证书信息', result=result).description()
+        Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0, info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result=result).description()
     else:
         results.append('Executable=' + appBinPath)
         with open(appInfoPath, 'rb') as fp:
@@ -247,4 +267,4 @@ def iOSCert(appInfoPath, filePath, appBinPath):
         results.append('Authority=Apple Root CA')
         if teamID != '':
             results.append('TeamIdentifier=' + teamID.strip())
-        Info(key='Info', title='iOS证书信息', level=0, info='应用打包使用的证书信息', result="\n".join(results)).description()
+        Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0, info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result="\n".join(results)).description()
