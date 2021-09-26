@@ -3,14 +3,22 @@ from ..info import Info
 from ..ipa import register
 import platform
 import subprocess
-
-TITLE = '证书类型检测'
-LEVEL = 1
-INFO = '检测ipa包的证书类型，是否使用了开发者证书导致无法上架App Store'
+from lib.translation import *
 
 
 class CodeSignCheck(Base):
     def scan(self):
+        set_values_for_key(key='CODESIGNCHECKTITLE', zh='证书类型检测',
+                           en='Certificate type detection')
+        set_values_for_key(key='CODESIGNCHECKINFO', zh='检测ipa包的证书类型，是否使用了开发者证书导致无法上架App Store',
+                           en='Check the certificate type of the ipa package, whether the developer certificate is used, and the App Store cannot be listed')
+        set_values_for_key(key='CODESIGNCHECKRESULT', zh='未使用发布证书打包，无法上架App Store',
+                           en='It is not packaged with a release certificate and cannot be put on the App Store')
+
+        TITLE = get_value('CODESIGNCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('CODESIGNCHECKINFO')
+
         hasEXP = True
         if platform.system() == 'Darwin':
             strline = 'codesign -vv -d ' + self.appBinPath
@@ -30,7 +38,7 @@ class CodeSignCheck(Base):
                     if 'Apple Distribution' in line:
                         hasEXP = False
         if hasEXP:
-            Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='未使用发布证书打包，无法上架App Store').description()
+            Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('CODESIGNCHECKRESULT')).description()
 
 
 register(CodeSignCheck)

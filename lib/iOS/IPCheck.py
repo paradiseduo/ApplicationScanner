@@ -1,14 +1,20 @@
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-
-TITLE = 'IP泄露检测'
-LEVEL = 2
-INFO = '检测iOS App程序中是否存在IP泄露风险'
+from lib.translation import *
 
 
 class IPCheck(Base):
     def scan(self):
+        set_values_for_key(key='IOSIPCHECKTITLE', zh='IP泄露检测',
+                           en='IP leak detection')
+        set_values_for_key(key='IOSIPCHECKINFO', zh='检测iOS App程序中是否存在IP泄露风险',
+                           en='Detect whether there is a risk of IP leakage in the iOS App')
+
+        TITLE = get_value('IOSIPCHECKTITLE')
+        LEVEL = 2
+        INFO = get_value('IOSIPCHECKINFO')
+
         with open(self.appPath + '/IPDump', 'r') as f:
             ips = f.readlines()
             ipArr = []
