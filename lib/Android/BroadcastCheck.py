@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'Broadcast Receiver动态注册检测'
-LEVEL = 1
-INFO = '检测App中是否存在动态注册Receiver风险'
+from lib.translation import *
 
 
 class BroadcastCheck(Base):
     def scan(self):
+        set_values_for_key(key='BROADCASTCHECKTITLE', zh='Broadcast Receiver动态注册检测',
+                           en='Broadcast Receiver dynamic registration detection')
+        set_values_for_key(key='BROADCASTCHECHINFO', zh='检测App中是否存在动态注册Receiver风险',
+                           en='Detect whether there is a risk of dynamically registering Receiver in the App')
+
+        TITLE = get_value('BROADCASTCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('BROADCASTCHECHINFO')
+
         strline = cmdString('grep -r "registerReceiver(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;)Landroid/content/Intent" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

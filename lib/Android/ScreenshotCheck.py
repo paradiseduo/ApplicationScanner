@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = '截屏攻击风险检测'
-LEVEL = 1
-INFO = '检测App是否存在截屏攻击风险检测'
+from lib.translation import *
 
 
 class ScreenshotCheck(Base):
     def scan(self):
+        set_values_for_key(key='SCREENCHECKTITLE', zh='截屏攻击风险检测',
+                           en='Screen capture attack risk detection')
+        set_values_for_key(key='SCREENCHECHINFO', zh='检测App是否存在截屏攻击风险检测',
+                           en="Detect whether the app has a screenshot attack risk detection")
+
+        TITLE = get_value('SCREENCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('SCREENCHECHINFO')
+
         strline = cmdString('grep -r ".super Landroid/app/Activity;" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

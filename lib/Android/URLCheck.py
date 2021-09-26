@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'URL泄露检测'
-LEVEL = 1
-INFO = '检测App泄露的URL'
+from lib.translation import *
 
 
 class URLCheck(Base):
     def scan(self):
+        set_values_for_key(key='ANDROIDURLCHECKTITLE', zh='URL泄露检测',
+                           en='URL leak detection')
+        set_values_for_key(key='ANDROIDURLCHECHINFO', zh='检测App泄露的URL',
+                           en="Detect URL leaked by App")
+
+        TITLE = get_value('ANDROIDURLCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('ANDROIDURLCHECHINFO')
+
         strline = cmdString('grep -r -Eo \'(http|https)://[^/"]+\' ' + self.appPath)
         out = os.popen(strline).readlines()
         urls = []

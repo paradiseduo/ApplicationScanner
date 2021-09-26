@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..tools import *
 from ..apk import register
-
-TITLE = 'Fragment注入攻击检测'
-LEVEL = 3
-INFO = '检测Apk中是否存在Fragment注入攻击'
+from lib.translation import *
 
 
 class FragmentCheck(Base):
     def scan(self):
+        set_values_for_key(key='FRAGMENTCHECKTITLE', zh='Fragment注入攻击检测',
+                           en='Fragment injection attack detection')
+        set_values_for_key(key='FRAGMENTCHECHINFO', zh='检测Apk中是否存在Fragment注入攻击',
+                           en='Detect whether there is a Fragment injection attack in Apk')
+
+        TITLE = get_value('FRAGMENTCHECKTITLE')
+        LEVEL = 3
+        INFO = get_value('FRAGMENTCHECHINFO')
+
         strline = cmdString('grep -r "Landroid/preference/PreferenceActivity" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

@@ -6,6 +6,7 @@ from xml.dom.minidom import parse
 import xml.dom.minidom
 from lib.info import Info
 from lib.tools import *
+from lib.translation import *
 
 scanners = {}
 
@@ -65,7 +66,9 @@ def appSign(filePath):
     for line in arr:
         if 'WARNING:' not in line:
             result += line + '\n'
-    Info(title='签名信息', level=0, info='签名验证详细信息', result=result).description()
+    set_values_for_key(key='ANDROIDSIGNTITLE', zh='签名信息', en='Signature information')
+    set_values_for_key(key='ANDROIDSIGNINFO', zh='签名验证详细信息', en='Signature verification details')
+    Info(title=get_value('ANDROIDSIGNTITLE'), level=0, info=get_value('ANDROIDSIGNINFO'), result=result).description()
 
 
 def fingerPrint(filePath):
@@ -79,24 +82,32 @@ def fingerPrint(filePath):
     result = ''
     for line in out:
         result += line
-    Info(title='证书指纹', level=0, info='证书指纹信息', result=result).description()
+    set_values_for_key(key='ANDROIDCERTTITLE', zh='证书指纹', en='Certificate fingerprint')
+    set_values_for_key(key='ANDROIDCERTINFO', zh='证书指纹信息', en='Certificate fingerprint information')
+    Info(title=get_value('ANDROIDCERTTITLE'), level=0, info=get_value('ANDROIDCERTINFO'), result=result).description()
 
 
 def permissionAndExport(filePath):
+    set_values_for_key(key='ANDROIDPACKAGENAME', zh='  包名: ', en='  Certificate fingerprint: ')
+    set_values_for_key(key='ANDROIDPERMISSIONLIST', zh='\n  使用权限列表', en='\n  Use permission list')
+
     XMLPath = filePath + '/AndroidManifest.xml'
     result = ''
     tree = xml.dom.minidom.parse(XMLPath)
     root = tree.documentElement
     package = root.getAttribute('package')
-    result += '  包名: ' + package
-    result += '\n  使用权限列表'
+    result += get_value('ANDROIDPACKAGENAME') + package
+    result += get_value('ANDROIDPERMISSIONLIST')
     permissionList = root.getElementsByTagName('uses-permission')
     for p in permissionList:
         result += '\n      ' + p.getAttribute('android:name')
     permissionList = root.getElementsByTagName('permission')
     for p in permissionList:
         result += '\n      ' + p.getAttribute('android:name')
-    Info(title='权限信息', level=0, info='应用使用权限信息', result=result).description()
+
+    set_values_for_key(key='ANDROIDPERMISSIONTITLE', zh='权限信息', en='Permission information')
+    set_values_for_key(key='ANDROIDPERMISSIONINFO', zh='应用使用权限信息', en='Application permission information')
+    Info(title=get_value('ANDROIDPERMISSIONTITLE'), level=0, info=get_value('ANDROIDPERMISSIONINFO'), result=result).description()
     results = []
     exportedList = root.getElementsByTagName('activity-alias') + root.getElementsByTagName(
         'activity') + root.getElementsByTagName('service') + root.getElementsByTagName(
@@ -105,10 +116,17 @@ def permissionAndExport(filePath):
         if a.getAttribute('android:exported') == 'true':
             p = a.getAttribute('android:name')
             results.append(p)
-    Info(title='组件导出检测', level=0, info='检测导出的组件信息', result="\n".join(results)).description()
+
+    set_values_for_key(key='ANDROIDEXPORTEDTITLE', zh='组件导出检测', en='Component export detection')
+    set_values_for_key(key='ANDROIDEXPORTEDINFO', zh='检测导出的组件信息', en='Detect exported component information')
+    Info(title=get_value('ANDROIDEXPORTEDTITLE'), level=0, info=get_value('ANDROIDEXPORTEDINFO'), result="\n".join(results)).description()
 
 
 def apkInfo(filePath):
+    set_values_for_key(key='ANDROIDSDKVERSION', zh='\n  SDK版本: ', en='\n  SDK Version: ')
+    set_values_for_key(key='ANDROIDVERSION', zh='\n  版本号: ', en='\n  Version: ')
+    set_values_for_key(key='ANDROIDVERSIONNAME', zh='\n  版本名: ', en='\n  Version name: ')
+
     yml = filePath + '/apktool.yml'
     result = ''
     with open(yml, mode='r') as f:
@@ -118,9 +136,12 @@ def apkInfo(filePath):
             if 'minSdkVersion' in s:
                 result += '  minSdkVersion: ' + s.split(':')[-1].lstrip().replace("'", '')
             if 'targetSdkVersion' in s:
-                result += '\n  SDK版本: ' + s.split(':')[-1].lstrip().replace("'", '')
+                result += get_value('ANDROIDSDKVERSION') + s.split(':')[-1].lstrip().replace("'", '')
             if 'versionCode' in s:
-                result += '\n  版本号: ' + s.split(':')[-1].lstrip().replace("'", '')
+                result += get_value('ANDROIDVERSION') + s.split(':')[-1].lstrip().replace("'", '')
             if 'versionName' in s:
-                result += '\n  版本名: ' + s.split(':')[-1].lstrip().replace("'", '')
-    Info(title='应用基本信息', level=0, info='App的基本信息', result=result).description()
+                result += get_value('ANDROIDVERSIONNAME') + s.split(':')[-1].lstrip().replace("'", '')
+
+    set_values_for_key(key='ANDROIDINFOTITLE', zh='应用基本信息', en='Basic application information')
+    set_values_for_key(key='ANDROIDINFOINFO', zh='App的基本信息', en='Basic information of the app')
+    Info(title=get_value('ANDROIDINFOTITLE'), level=0, info=get_value('ANDROIDINFOINFO'), result=result).description()

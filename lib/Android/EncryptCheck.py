@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'AES/DES弱加密风险检测'
-LEVEL = 1
-INFO = '检测App中是否存在AES/DES弱加密风险'
+from lib.translation import *
 
 
 class EncryptCheck(Base):
     def scan(self):
+        set_values_for_key(key='ENCRYPTCHECKTITLE', zh='AES/DES弱加密风险检测',
+                           en='AES/DES weak encryption risk detection')
+        set_values_for_key(key='ENCRYPTCHECHINFO', zh='检测App中是否存在AES/DES弱加密风险',
+                           en='Detect whether there is a risk of weak AES/DES encryption in the App')
+
+        TITLE = get_value('ENCRYPTCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('ENCRYPTCHECHINFO')
+
         strline = cmdString(
             'grep -r "Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())

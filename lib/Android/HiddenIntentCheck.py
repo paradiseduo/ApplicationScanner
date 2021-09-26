@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..tools import *
 from ..apk import register
-
-TITLE = 'Intent组件隐式调用风险检测'
-LEVEL = 1
-INFO = '检测Apk中的Intent组件是否存在隐式调用的风险'
+from lib.translation import *
 
 
 class HiddenIntentCheck(Base):
     def scan(self):
+        set_values_for_key(key='INTENTCHECKTITLE', zh='Intent组件隐式调用风险检测',
+                           en='Intent component implicit call risk detection')
+        set_values_for_key(key='INTENTCHECHINFO', zh='检测Apk中的Intent组件是否存在隐式调用的风险',
+                           en='Detect whether there is a risk of implicit calling of the Intent component in Apk')
+
+        TITLE = get_value('INTENTCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('INTENTCHECHINFO')
+
         strline = cmdString('grep -r "Landroid/content/Intent;-><init>" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

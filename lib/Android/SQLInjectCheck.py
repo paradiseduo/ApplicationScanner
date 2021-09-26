@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'SQL注入检测'
-LEVEL = 2
-INFO = '检测App是否存在SQL注入的利用条件'
+from lib.translation import *
 
 
 class SQLInjectCheck(Base):
     def scan(self):
+        set_values_for_key(key='SQLCHECKTITLE', zh='SQL注入检测',
+                           en='SQL injection detection')
+        set_values_for_key(key='SQLCHECHINFO', zh='检测App是否存在SQL注入的利用条件',
+                           en="Detect whether there are usage conditions for SQL injection in the App")
+
+        TITLE = get_value('SQLCHECKTITLE')
+        LEVEL = 2
+        INFO = get_value('SQLCHECHINFO')
+
         strline = cmdString('grep -r "Landroid/database/sqlite/SQLiteDatabase" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

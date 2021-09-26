@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'SDCARD加载dex检测'
-LEVEL = 1
-INFO = '检测App程序中的是否存在从sdcard动态加载dex的风险'
+from lib.translation import *
 
 
 class DexLoadCheck(Base):
     def scan(self):
+        set_values_for_key(key='DEXLOADCHECKTITLE', zh='SDCARD加载dex检测',
+                           en='SDCARD loading dex detection')
+        set_values_for_key(key='DEXLOADCHECHINFO', zh='检测App程序中的是否存在从sdcard动态加载dex的风险',
+                           en='Detect whether there is a risk of dynamically loading dex from sdcard in the App program')
+
+        TITLE = get_value('DEXLOADCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('DEXLOADCHECHINFO')
+
         strline = cmdString(
             'grep -r "Ldalvik/system/DexClassLoader;-><init>" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())

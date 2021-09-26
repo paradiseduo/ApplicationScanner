@@ -2,14 +2,20 @@ import os
 from ..Base import Base
 from ..info import Info
 from ..apk import register
-
-TITLE = 'FFMPEG任意文件读取检测'
-LEVEL = 1
-INFO = '检测App的ffmpeg so库是否存在任意文件读取漏洞'
+from lib.translation import *
 
 
 class FFmpegCheck(Base):
     def scan(self):
+        set_values_for_key(key='FFMPEDCHECKTITLE', zh='FFMPEG任意文件读取检测',
+                           en='FFMPEG arbitrary file reading detection')
+        set_values_for_key(key='FFMPEGCHECHINFO', zh='检测App的ffmpeg so库是否存在任意文件读取漏洞',
+                           en='Detect whether there are any file reading vulnerabilities in the ffmpeg so library of the App')
+
+        TITLE = get_value('FFMPEDCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('FFMPEGCHECHINFO')
+
         strline = 'find ' + self.appPath + ' -name *.so | grep "ffmpeg\|FFmpeg"'
         arr = os.popen(strline).readlines()
         versions = []

@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = '网络端口开放威胁检测'
-LEVEL = 1
-INFO = '检测App中是否存在网络端口开放风险'
+from lib.translation import *
 
 
 class PortCheck(Base):
     def scan(self):
+        set_values_for_key(key='PORTCHECKTITLE', zh='网络端口开放威胁检测',
+                           en='Threat detection of network port opening')
+        set_values_for_key(key='PORTCHECHINFO', zh='检测App中是否存在网络端口开放风险',
+                           en='Detect whether there is a risk of network port opening in the App')
+
+        TITLE = get_value('PORTCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('PORTCHECHINFO')
+
         strline = cmdString('grep -r "Ljava/net/DatagramPacket;->\|Ljava/net/DatagramSocket;->\|Ljava/net/Socket;-><init>\|Ljava/net/ServerSocket;-><init>" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

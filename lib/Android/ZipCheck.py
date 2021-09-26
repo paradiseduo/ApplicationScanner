@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..tools import *
 from ..apk import register
-
-TITLE = 'Zip文件解压目录遍历检测'
-LEVEL = 3
-INFO = '检测Apk中是否存在Zip文件解压目录遍历漏洞'
+from lib.translation import *
 
 
 class ZipCheck(Base):
     def scan(self):
+        set_values_for_key(key='ZIPCHECKTITLE', zh='Zip文件解压目录遍历检测',
+                           en="Zip file decompression directory traversal detection")
+        set_values_for_key(key='ZIPDCHECHINFO', zh='检测Apk中是否存在Zip文件解压目录遍历漏洞',
+                           en="Detect whether there is a traversal vulnerability in Zip file decompression directory in Apk")
+
+        TITLE = get_value('ZIPCHECKTITLE')
+        LEVEL = 3
+        INFO = get_value('ZIPDCHECHINFO')
+
         strline = cmdString('grep -r "Ljava/util/zip/ZipInputStream" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

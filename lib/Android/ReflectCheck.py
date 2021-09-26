@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'Java反射检测'
-LEVEL = 1
-INFO = '检测App程序是否存在反射调用风险'
+from lib.translation import *
 
 
 class ReflectCheck(Base):
     def scan(self):
+        set_values_for_key(key='JAVACHECKTITLE', zh='Java反射检测',
+                           en='Java reflection detection')
+        set_values_for_key(key='JAVACHECHINFO', zh='检测App程序是否存在反射调用风险',
+                           en="Detect whether there is a risk of reflection calls in the App program")
+
+        TITLE = get_value('JAVACHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('JAVACHECHINFO')
+
         strline = cmdString(
             'grep -r "Ljava/lang/reflect/" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())

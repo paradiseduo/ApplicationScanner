@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..tools import *
 from ..apk import register
-
-TITLE = '日志泄漏风险检测'
-LEVEL = 1
-INFO = '检测Apk中是否存在日志泄露风险，重点检测Log与print函数'
+from lib.translation import *
 
 
 class LogCheck(Base):
     def scan(self):
+        set_values_for_key(key='ANDROIDLOGCHECKTITLE', zh='日志泄漏风险检测',
+                           en='JavaScript resource file leak detection')
+        set_values_for_key(key='ANDROIDLOGCHECHINFO', zh='检测Apk中是否存在日志泄露风险，重点检测Log与print函数',
+                           en='Detect whether there is a risk of JavaScript file information leakage in Apk')
+
+        TITLE = get_value('ANDROIDLOGCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('ANDROIDLOGCHECHINFO')
+
         strline = cmdString('grep -r "Landroid/util/Log\|Ljava/io/PrintStream" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

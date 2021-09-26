@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..tools import *
 from ..apk import register
-
-TITLE = 'PendingIntent错误使用Intent风险检测'
-LEVEL = 1
-INFO = '检测App中是否存在PendingIntent使用了隐式Intent或者空Intent的风险'
+from lib.translation import *
 
 
 class PendingIntentCheck(Base):
     def scan(self):
+        set_values_for_key(key='PENDINGCHECKTITLE', zh='PendingIntent错误使用Intent风险检测',
+                           en='PendingIntent wrong use of Intent risk detection')
+        set_values_for_key(key='PENDINGCHECHINFO', zh='检测App中是否存在PendingIntent使用了隐式Intent或者空Intent的风险',
+                           en='Detect whether there is a risk of PendingIntent using implicit Intent or empty Intent in App')
+
+        TITLE = get_value('PENDINGCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('PENDINGCHECHINFO')
+
         strline = cmdString('grep -r "Landroid/app/PendingIntent;" ' + self.appPath)
         paths = getSmalis(os.popen(strline).readlines())
         results = []

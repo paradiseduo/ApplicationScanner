@@ -2,14 +2,20 @@ import os
 from ..Base import Base
 from ..info import Info
 from ..apk import register
-
-TITLE = 'So文件破解风险检测'
-LEVEL = 2
-INFO = '检测Apk中的so文件是否可被破解读取'
+from lib.translation import *
 
 
 class SoCheck(Base):
     def scan(self):
+        set_values_for_key(key='SOCHECKTITLE', zh='So文件破解风险检测',
+                           en='So file cracking risk detection')
+        set_values_for_key(key='SOCHECHINFO', zh='检测Apk中的so文件是否可被破解读取',
+                           en="Detect whether the so file in Apk can be cracked and read")
+
+        TITLE = get_value('SOCHECKTITLE')
+        LEVEL = 2
+        INFO = get_value('SOCHECHINFO')
+
         strline = 'find ' + self.appPath + ' -name *.so | grep -v "/original/"'
         arr = os.popen(strline).readlines()
         result = ''

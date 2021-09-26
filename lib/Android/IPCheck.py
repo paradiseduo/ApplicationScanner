@@ -2,14 +2,20 @@ from ..Base import Base
 from ..info import Info
 from ..apk import register
 from ..tools import *
-
-TITLE = 'IP泄露检测'
-LEVEL = 1
-INFO = '检测App泄露的IP'
+from lib.translation import *
 
 
 class IPCheck(Base):
     def scan(self):
+        set_values_for_key(key='ANDROIDIPCHECKTITLE', zh='IP泄露检测',
+                           en='Intent component implicit call risk detection')
+        set_values_for_key(key='ANDROIDIPCHECHINFO', zh='检测App泄露的IP',
+                           en='Detect whether there is a risk of implicit calling of the Intent component in Apk')
+
+        TITLE = get_value('ANDROIDIPCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('ANDROIDIPCHECHINFO')
+
         strline = cmdString("grep -r -E -o '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' " + self.appPath)
         out = os.popen(strline).readlines()
         ips = []
