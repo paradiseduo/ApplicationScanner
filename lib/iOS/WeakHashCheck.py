@@ -1,14 +1,20 @@
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-
-TITLE = '弱哈希算法检测'
-LEVEL = 1
-INFO = '检测iOS App程序中是否使用了不安全的弱哈希算法'
+from lib.translation import *
 
 
 class WeakHashCheck(Base):
     def scan(self):
+        set_values_for_key(key='WEAKHASHCHECKTITLE', zh='弱哈希算法检测',
+                           en='Weak hash algorithm detection')
+        set_values_for_key(key='WEAKHASHCHECKINFO', zh='检测iOS App程序中是否使用了不安全的弱哈希算法',
+                           en='Detect whether an insecure weak hash algorithm is used in the iOS App')
+
+        TITLE = get_value('WEAKHASHCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('WEAKHASHCHECKINFO')
+
         results = []
         with open(self.appPath + '/StringDump', 'r') as f:
             lines = f.readlines()

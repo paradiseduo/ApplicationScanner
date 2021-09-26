@@ -1,14 +1,20 @@
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-
-TITLE = 'HTTP传输数据风险检测'
-LEVEL = 2
-INFO = '检测iOS App程序是否使用未加密的HTTP协议传输数据'
+from lib.translation import *
 
 
 class URLCheck(Base):
     def scan(self):
+        set_values_for_key(key='IOSURLCHECKTITLE', zh='HTTP传输数据风险检测',
+                           en='HTTP transmission data risk detection')
+        set_values_for_key(key='IOSURLCHECKINFO', zh='检测iOS App程序是否使用未加密的HTTP协议传输数据',
+                           en='Detect whether the iOS App program uses unencrypted HTTP protocol to transmit data')
+
+        TITLE = get_value('IOSURLCHECKTITLE')
+        LEVEL = 2
+        INFO = get_value('IOSURLCHECKINFO')
+
         results = []
         with open(self.appPath + '/URLDump', 'r') as f:
             lines = f.readlines()

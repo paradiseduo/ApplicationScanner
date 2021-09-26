@@ -1,14 +1,20 @@
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-
-TITLE = 'AES/DES加密算法不安全使用检测'
-LEVEL = 1
-INFO = '检测iOS App程序中使用AES/DES加密算法时是否使用了不安全的加密模式'
+from lib.translation import *
 
 
 class WeakCryptCheck(Base):
     def scan(self):
+        set_values_for_key(key='WEAKCRYPTCHECKTITLE', zh='AES/DES加密算法不安全使用检测',
+                           en='AES/DES encryption algorithm insecure use detection')
+        set_values_for_key(key='WEAKCRYPTCHECKINFO', zh='检测iOS App程序中使用AES/DES加密算法时是否使用了不安全的加密模式',
+                           en='Detect whether an insecure encryption mode is used when the AES/DES encryption algorithm is used in the iOS App')
+
+        TITLE = get_value('WEAKCRYPTCHECKTITLE')
+        LEVEL = 1
+        INFO = get_value('WEAKCRYPTCHECKINFO')
+
         results = []
         with open(self.appPath + '/StringDump', 'r') as f:
             lines = f.readlines()
