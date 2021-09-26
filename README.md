@@ -18,6 +18,7 @@
         -h help
         -i <inputPath>
         -s save cache (Default clear cache)
+	-l language ['zh', 'en'] (Default zh)
 ```
 ## Requirement
 * Only support Mac/Linux, no Windows version.
