@@ -7,6 +7,10 @@ import xml.dom.minidom
 from lib.info import Info
 from lib.tools import *
 from lib.translation import *
+from pathlib import Path
+
+apktool = str(Path(__file__).parents[1] / 'ThirdTools/apktool.jar')
+apksigner = str(Path(__file__).parents[1] / 'ThirdTools/apksigner.jar')
 
 scanners = {}
 
@@ -34,7 +38,8 @@ def apkScan(inputfile, save):
     # 解压apk包
     console.print('\n[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
-    strline = 'java -jar ./ThirdTools/apktool.jar d -f "' + inputfile + '" -o ' + filePath + ' --only-main-classes'
+    strline = f'java -jar {apktool} d -f {inputfile} -o {filePath} --only-main-classes'
+
     subprocess.Popen(strline, shell=True).communicate()
     console.print('[bold green]Finish[/bold green]')
     filePath = os.path.abspath(filePath)
@@ -58,7 +63,7 @@ def apkScan(inputfile, save):
     
 
 def appSign(filePath):
-    strline = 'java -jar ./ThirdTools/apksigner.jar verify -v --print-certs ' + filePath
+    strline = f'java -jar {apksigner} verify -v --print-certs {filePath}'
     p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     std = p.communicate()
     arr = std[0].decode('utf-8', 'replace').split('\n')
