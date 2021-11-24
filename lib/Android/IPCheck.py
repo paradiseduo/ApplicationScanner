@@ -24,19 +24,20 @@ class IPCheck(Base):
                 continue
             ip = item.strip().split(':')[-1]
             arr = str(ip).split('.')
-            if arr[0].startswith('0') and len(arr[0]) > 1 \
-                    or arr[1].startswith('0') and len(arr[1]) > 1 \
-                    or arr[2].startswith('0') and len(arr[2]) > 1 \
-                    or arr[3].startswith('0') and len(arr[3]) > 1:
-                continue
-            # 排除小于10开头的，大概率是版本号，不是IP
-            if len(arr[0]) == 1 and int(arr[0]) < 10:
-                continue
-            # 排除255开头的，忽略掩码地址
-            if len(arr[0]) == 3 and int(arr[0]) == 255:
-                continue
-            if ip not in ips:
-                ips.append(ip)
+            if len(arr) == 4:
+                if arr[0].startswith('0') and len(arr[0]) > 1 \
+                        or arr[1].startswith('0') and len(arr[1]) > 1 \
+                        or arr[2].startswith('0') and len(arr[2]) > 1 \
+                        or arr[3].startswith('0') and len(arr[3]) > 1:
+                    continue
+                # 排除小于10开头的，大概率是版本号，不是IP
+                if len(arr[0]) == 1 and int(arr[0]) < 10:
+                    continue
+                # 排除255开头的，忽略掩码地址
+                if len(arr[0]) == 3 and int(arr[0]) == 255:
+                    continue
+                if ip not in ips:
+                    ips.append(ip)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(ips)).description()
 
 
