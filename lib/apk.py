@@ -71,9 +71,10 @@ def appSign(filePath):
     for line in arr:
         if 'WARNING:' not in line:
             result += line + '\n'
-    set_values_for_key(key='ANDROIDSIGNTITLE', zh='签名信息', en='Signature information')
-    set_values_for_key(key='ANDROIDSIGNINFO', zh='签名验证详细信息', en='Signature verification details')
-    Info(title=get_value('ANDROIDSIGNTITLE'), level=0, info=get_value('ANDROIDSIGNINFO'), result=result).description()
+    if len(result) > 0:
+        set_values_for_key(key='ANDROIDSIGNTITLE', zh='签名信息', en='Signature information')
+        set_values_for_key(key='ANDROIDSIGNINFO', zh='签名验证详细信息', en='Signature verification details')
+        Info(title=get_value('ANDROIDSIGNTITLE'), level=0, info=get_value('ANDROIDSIGNINFO'), result=result).description()
 
 
 def fingerPrint(filePath):
@@ -82,14 +83,15 @@ def fingerPrint(filePath):
     rsa = ''
     for line in out:
         rsa = line[:-1].lstrip()
-    strline = 'keytool -printcert -file ' + filePath + '/original/META-INF/' + rsa
-    out = os.popen(strline).readlines()
-    result = ''
-    for line in out:
-        result += line
-    set_values_for_key(key='ANDROIDCERTTITLE', zh='证书指纹', en='Certificate fingerprint')
-    set_values_for_key(key='ANDROIDCERTINFO', zh='证书指纹信息', en='Certificate fingerprint information')
-    Info(title=get_value('ANDROIDCERTTITLE'), level=0, info=get_value('ANDROIDCERTINFO'), result=result).description()
+    if len(rsa) > 0:
+        strline = 'keytool -printcert -file ' + filePath + '/original/META-INF/' + rsa
+        out = os.popen(strline).readlines()
+        result = ''
+        for line in out:
+            result += line
+        set_values_for_key(key='ANDROIDCERTTITLE', zh='证书指纹', en='Certificate fingerprint')
+        set_values_for_key(key='ANDROIDCERTINFO', zh='证书指纹信息', en='Certificate fingerprint information')
+        Info(title=get_value('ANDROIDCERTTITLE'), level=0, info=get_value('ANDROIDCERTINFO'), result=result).description()
 
 
 def permissionAndExport(filePath):
