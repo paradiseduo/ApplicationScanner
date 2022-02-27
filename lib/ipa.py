@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
+import os.path
 import plistlib
 import shutil
 import lief
@@ -10,6 +11,7 @@ from lib.info import Info
 from lib.translation import *
 
 scanners = {}
+
 
 def register(scanner_class):
     scanners[scanner_class.__name__] = scanner_class
@@ -35,8 +37,22 @@ def ipaScan(filePath, save):
     console.print('\n[magenta]Unzip ipa [/magenta][bold magenta]' + filePath + '[/bold magenta]')
     filePath, appName = ipatool(filePath)
     appBinName = appName.replace('.app', '')
-    appBinPath = filePath + '/' + appName + '/' + appBinName
-    appInfoPath = filePath + '/' + appName + '/' + 'Info.plist'
+    appPath = f'{filePath}/{appName}'
+    appBinPath = f'{appPath}/{appBinName}'
+    if not os.path.exists(appBinPath):
+        for parent, dirnames, filenames in os.walk(appPath, followlinks=False):
+            if parent == appPath:
+                for filename in filenames:
+                    if '.' not in filename:
+                        newPath = os.path.join(parent, filename)
+                        p = subprocess.Popen(f'file \'{newPath}\'', shell=True, stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE)
+                        arr = p.communicate()[0].decode('utf-8', 'replace').split('\n')
+                        for item in arr:
+                            if 'Mach-O' in item:
+                                appBinPath = newPath
+                                break
+    appInfoPath = f'{filePath}/{appName}/Info.plist'
     console.print('[bold green]Finish[/bold green]')
     try:
         iOSInfo(appInfoPath)
@@ -62,12 +78,11 @@ def ipaScan(filePath, save):
 
 def ipatool(inputfile):
     appName = ''
-    filePath = 'Payload' + randomStr(6)
-    strline = 'cp "' + inputfile + '" test.zip && unzip -o test.zip'
-    subprocess.call(strline, shell=True, stdout=subprocess.DEVNULL)
-    subprocess.call('rm -rf test.zip', shell=True, stdout=subprocess.DEVNULL)
-    subprocess.call('mv Payload ' + filePath, shell=True, stdout=subprocess.DEVNULL)
-    p = subprocess.Popen('cd ' + filePath + ' && ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    filePath = f'Payload{randomStr(6)}'
+    subprocess.call(f'cp \'{inputfile}\' test.zip && unzip -o test.zip', shell=True, stdout=subprocess.DEVNULL)
+    subprocess.call(f'rm -rf test.zip', shell=True, stdout=subprocess.DEVNULL)
+    subprocess.call(f'mv Payload \'{filePath}\'', shell=True, stdout=subprocess.DEVNULL)
+    p = subprocess.Popen(f'cd \'{filePath}\' && ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     arr = p.communicate()[0].decode('utf-8', 'replace').split('\n')
     for item in arr:
         if '.app' in item:
@@ -120,21 +135,19 @@ def iOSInfo(appInfoPath):
     set_values_for_key(key='BaseTitle', zh='APP基本信息', en='Application essential information')
     set_values_for_key(key='BaseInfo', zh='APP的基本信息', en='Application\'s essential information')
 
-    Info(key='Info', title=get_value('BaseTitle'), level=0, info=get_value('BaseInfo'), result="\n".join(results)).description()
+    Info(key='Info', title=get_value('BaseTitle'), level=0, info=get_value('BaseInfo'),
+         result="\n".join(results)).description()
 
 
 def reverse(filePath, appBinPath):
     stringDumpPath = os.path.abspath(filePath) + '/StringDump'
-    strline1 = 'strings -a -T Mach-O ' + appBinPath + " > " + stringDumpPath
+    strline1 = f'strings -a -T Mach-O \'{appBinPath}\' > \'{stringDumpPath}\''
     if platform.system() == 'Darwin':
-        strline1 = 'strings -a ' + appBinPath + " > " + stringDumpPath
-    strline2 = 'cat ' + stringDumpPath + " | grep ']$' | grep '^-\[\|^+\[' > " + os.path.abspath(
-        filePath) + '/ClassDump'
-    strline3 = 'cat ' + stringDumpPath + " | grep '^http://\|^https://' > " + os.path.abspath(filePath) + '/URLDump'
-    strline4 = 'cat ' + stringDumpPath + " | grep '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' > " + os.path.abspath(
-        filePath) + '/IPDump'
-    strline5 = 'cat ' + stringDumpPath + " | grep @rpath | grep -v libswift > " + os.path.abspath(
-        filePath) + '/RpathDump'
+        strline1 = f'strings -a \'{appBinPath}\' > \'{stringDumpPath}\''
+    strline2 = f'cat \'{stringDumpPath}\' | grep \']$\' | grep \'^-\[\|^+\[\' > \'{os.path.abspath(filePath)}\'/ClassDump'
+    strline3 = f'cat \'{stringDumpPath}\' | grep \'^http://\|^https://\' > \'{os.path.abspath(filePath)}\'/URLDump'
+    strline4 = f'cat \'{stringDumpPath}\' | grep \'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\' > \'{os.path.abspath(filePath)}\'/IPDump'
+    strline5 = f'cat \'{stringDumpPath}\' | grep @rpath | grep -v libswift > \'{os.path.abspath(filePath)}\'/RpathDump'
     cmds = [strline1, strline2, strline3, strline4, strline5]
     for strline in cmds:
         runner = RunCMD()
@@ -203,7 +216,8 @@ def iOSRpath(binPath):
             results.append(framework)
     set_values_for_key(key='THIRDLIST', zh='三方库列表', en='Thrid library list')
     set_values_for_key(key='THIRDLISTINFO', zh='查看应用使用的所有三方库', en='View all third libraries used by the application')
-    Info(key='Info', title=get_value('THIRDLIST'), level=0, info=get_value('THIRDLISTINFO'), result="\n".join(results)).description()
+    Info(key='Info', title=get_value('THIRDLIST'), level=0, info=get_value('THIRDLISTINFO'),
+         result="\n".join(results)).description()
 
 
 def iOSAuthority(appInfoPath):
@@ -212,10 +226,16 @@ def iOSAuthority(appInfoPath):
         pl = plistlib.load(fp)
     for key in pl.keys():
         if 'UsageDescription' in key:
-            results.append(key + ":" + pl[key])
+            if 'UsageDescriptionDictionary' in key:
+                dic = pl[key]
+                for newKey in dic.keys():
+                    results.append(newKey + ":" + dic[newKey])
+            else:
+                results.append(key + ":" + pl[key])
     set_values_for_key(key='APPPERMISSIONSLIST', zh='应用权限列表', en='App permissions list')
     set_values_for_key(key='APPPERMISSIONSLISTINFO', zh='查看应用使用的所有权限', en='View all permissions used by the app')
-    Info(key='Info', title=get_value('APPPERMISSIONSLIST'), level=0, info=get_value('APPPERMISSIONSLISTINFO'), result="\n".join(results)).description()
+    Info(key='Info', title=get_value('APPPERMISSIONSLIST'), level=0, info=get_value('APPPERMISSIONSLISTINFO'),
+         result="\n".join(results)).description()
 
 
 def iOSCert(appInfoPath, filePath, appBinPath):
@@ -224,10 +244,11 @@ def iOSCert(appInfoPath, filePath, appBinPath):
     set_values_for_key(key='IOSCERTIFICATEINFORMATIONINFO', zh='应用打包使用的证书信息',
                        en='Certificate information used for application packaging')
     if platform.system() == 'Darwin':
-        strline = 'codesign -vv -d ' + appBinPath
+        strline = f'codesign -vv -d \'{appBinPath}\''
         p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         result = p.communicate()[1].decode('utf-8', 'ignore')
-        Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0, info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result=result).description()
+        Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0,
+             info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result=result).description()
     else:
         results.append('Executable=' + appBinPath)
         with open(appInfoPath, 'rb') as fp:
@@ -267,4 +288,5 @@ def iOSCert(appInfoPath, filePath, appBinPath):
         results.append('Authority=Apple Root CA')
         if teamID != '':
             results.append('TeamIdentifier=' + teamID.strip())
-        Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0, info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result="\n".join(results)).description()
+        Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0,
+             info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result="\n".join(results)).description()

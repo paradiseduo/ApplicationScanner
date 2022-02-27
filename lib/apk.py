@@ -38,7 +38,7 @@ def apkScan(inputfile, save):
     # 解压apk包
     console.print('\n[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
-    strline = f'java -jar {apktool} d -f {inputfile} -o {filePath} --only-main-classes'
+    strline = f'java -jar \'{apktool}\' d -f \'{inputfile}\' -o \'{filePath}\' --only-main-classes'
 
     subprocess.Popen(strline, shell=True).communicate()
     console.print('[bold green]Finish[/bold green]')
@@ -63,7 +63,7 @@ def apkScan(inputfile, save):
     
 
 def appSign(filePath):
-    strline = f'java -jar {apksigner} verify -v --print-certs {filePath}'
+    strline = f'java -jar {apksigner} verify -v --print-certs \'{filePath}\''
     p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     std = p.communicate()
     arr = std[0].decode('utf-8', 'replace').split('\n')
@@ -78,13 +78,13 @@ def appSign(filePath):
 
 
 def fingerPrint(filePath):
-    strline = 'cd ' + filePath + '/original/META-INF && (ls | grep *.RSA)'
+    strline = f'cd \'{filePath}\'/original/META-INF && (ls | grep *.RSA)'
     out = os.popen(strline).readlines()
     rsa = ''
     for line in out:
         rsa = line[:-1].lstrip()
     if len(rsa) > 0:
-        strline = 'keytool -printcert -file ' + filePath + '/original/META-INF/' + rsa
+        strline = f'keytool -printcert -file \'{filePath}\'/original/META-INF/{rsa}'
         out = os.popen(strline).readlines()
         result = ''
         for line in out:
