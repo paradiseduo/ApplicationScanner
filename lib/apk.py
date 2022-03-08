@@ -298,7 +298,6 @@ def apkPermissionLevel(permissionList):
         '读取应用使用情况(PACKAGE_USAGE_STATS)': '允许应用读取本机的应用使用情况 ',
         '请求安装应用(REQUEST_INSTALL_PACKAGES)': '允许应用安装其他应用 ',
         '访问所有文件(MANAGE_EXTERNAL_STORAGE)': '允许应用访问分区存储模式下SD卡上的所有文件',
-        '自启动(RECEIVE_BOOT_COMPLETED)': '应用可自启动，允许应用始终运行',
         '应用软件列表(GET_INSTALLED_APPS)': '允许应用读取手机上的应用软件列表'
     }
     normalArray = []
