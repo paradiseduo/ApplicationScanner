@@ -49,7 +49,6 @@ You can download [test.apk](https://github.com/paradiseduo/paradiseduo/raw/maste
 
 ```bash
 > python3 AppScanner.py -i test.apk
-
                       _____
     /\               / ____|
    /  \   _ __  _ __| (___   ___ __ _ _ __  _ __   ___ _ __
@@ -61,11 +60,11 @@ You can download [test.apk](https://github.com/paradiseduo/paradiseduo/raw/maste
 
                              ParadiseDuo  [2.2]
 
-Unzip apk test.apk
-I: Using Apktool 2.5.0 on test.apk
+Unzip apk /Users/admin/Downloads/test.apk
+I: Using Apktool 2.6.0 on test.apk
 I: Loading resource table...
 I: Decoding AndroidManifest.xml with resources...
-I: Loading resource table from file: /Users/xxx/Library/apktool/framework/1.apk
+I: Loading resource table from file: /Users/admin/Library/apktool/framework/1.apk
 I: Regular manifest package...
 I: Decoding file-resources...
 I: Decoding values */* XMLs...
@@ -86,46 +85,85 @@ Finish
 │          │   版本号: 1         │
 │          │   版本名: 1.0       │
 └──────────┴─────────────────────┘
-┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ 检测项目 ┃ 权限信息                                                   ┃
-├──────────┼────────────────────────────────────────────────────────────┤
-│ 项目描述 │ 应用使用权限信息                                           │
-├──────────┼────────────────────────────────────────────────────────────┤
-│ 危险等级 │ 信息                                                       │
-├──────────┼────────────────────────────────────────────────────────────┤
-│ 项目描述 │   包名: com.hijack.demo.hijack                             │
-│          │   使用权限列表                                             │
-│          │       android.permission.ACCESS_COARSE_LOCATION            │
-│          │       android.permission.GET_TASKS                         │
-│          │       android.permission.INTERNET                          │
-│          │       android.permission.KILL_BACKGROUND_PROCESSES         │
-│          │       android.permission.READ_PHONE_STATE                  │
-│          │       android.permission.ACCESS_WIFI_STATE                 │
-│          │       android.permission.ACCESS_NETWORK_STATE              │
-│          │       android.permission.RECEIVE_BOOT_COMPLETED            │
-│          │       android.permission.WRITE_EXTERNAL_STORAGE            │
-│          │       android.permission.VIBRATE                           │
-│          │       android.permission.WAKE_LOCK                         │
-│          │       android.permission.REORDER_TASKS                     │
-│          │       android.permission.READ_EXTERNAL_STORAGE             │
-│          │       android.permission.WRITE_SYNC_SETTINGS               │
-│          │       android.permission.READ_SYNC_SETTINGS                │
-│          │       android.permission.RECORD_AUDIO                      │
-│          │       android.permission.SYSTEM_ALERT_WINDOW               │
-│          │       android.permission.MODIFY_AUDIO_SETTINGS             │
-│          │       com.techwolf.kanzhun.app.permission.MIPUSH_RECEIVE   │
-│          │       android.permission.CAMERA                            │
-│          │       android.permission.READ_LOGS                         │
-│          │       android.permission.ACCESS_FINE_LOCATION              │
-│          │       android.permission.CHANGE_WIFI_STATE                 │
-│          │       android.permission.ACCESS_LOCATION_EXTRA_COMMANDS    │
-│          │       android.permission.BLUETOOTH                         │
-│          │       android.permission.BLUETOOTH_ADMIN                   │
-│          │       android.permission.REQUEST_INSTALL_PACKAGES          │
-│          │       com.techwolf.kanzhun.app.permission.PROCESS_PUSH_MSG │
-│          │       com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE       │
-│          │       com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE        │
-└──────────┴────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 包名信息                       ┃
+├──────────┼────────────────────────────────┤
+│ 项目描述 │ 应用包名信息                   │
+├──────────┼────────────────────────────────┤
+│ 危险等级 │ 信息                           │
+├──────────┼────────────────────────────────┤
+│ 项目描述 │   包名: com.hijack.demo.hijack │
+└──────────┴────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 一般权限信息                                                                                                                                                 ┃
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 应用获取的一般权限信息                                                                                                                                       │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 信息                                                                                                                                                         │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ android.permission.WAKE_LOCK: 唤醒锁: 允许应用持有系统唤醒锁，防止进程进入睡眠状态或息屏                                                                     │
+│          │ android.permission.MODIFY_AUDIO_SETTINGS: 修改音频设置: 允许该应用修改移动智能终端音频设置                                                                   │
+│          │ android.permission.KILL_BACKGROUND_PROCESSES: 后台杀进程: 允许应用调用特定方法结束其他应用的后台进程                                                         │
+│          │ android.permission.WRITE_SYNC_SETTINGS: 修改帐户同步设置: 允许该应用修改某个帐户的同步设置，包括启用和停用同步                                               │
+│          │ android.permission.ACCESS_LOCATION_EXTRA_COMMANDS: 访问额外位置 : 允许应用软件访问额外的位置提供指令                                                         │
+│          │ android.permission.BLUETOOTH: 蓝牙: 允许应用软件连接配对过的蓝牙设备                                                                                         │
+│          │ android.permission.VIBRATE: 振动: 允许应用使手机振动                                                                                                         │
+│          │ android.permission.RECEIVE_BOOT_COMPLETED: 接收启动完成广播: 允许应用接收系统启动完成广播                                                                    │
+│          │ android.permission.INTERNET: 使用互联网: 允许应用打开网络接口                                                                                                │
+│          │ android.permission.READ_SYNC_SETTINGS: 读取帐户同步设置: 允许该应用读取某个帐户的同步设置。例如，此权限可确定“联系 人”是否与允许该应用读取某个帐户的同步设置 │
+│          │ android.permission.CHANGE_WIFI_STATE: 更改WIFI连接状态: 允许应用改变WIFI连接状态                                                                             │
+│          │ android.permission.REORDER_TASKS: 重新排序正在运行的应用: 允许应用对正在运行的应用重新排序                                                                   │
+│          │ android.permission.BLUETOOTH_ADMIN: 蓝牙: 允许应用软件连接配对过的蓝牙设备                                                                                   │
+│          │ android.permission.ACCESS_NETWORK_STATE: 获取网络连接: 允许获取网络连接信息                                                                                  │
+└──────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 危险权限信息                                                                                           ┃
+├──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 应用获取的危险权限信息                                                                                 │
+├──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 高危                                                                                                   │
+├──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ android.permission.READ_EXTERNAL_STORAGE: 读取外部存储空间: 允许应用软件读取扩展存                     │
+│          │ android.permission.WRITE_EXTERNAL_STORAGE: 写入外部存储空间: 允许应用软件写入外部存储，如SD卡上写文件  │
+│          │ android.permission.ACCESS_WIFI_STATE: 获取无线状态: 允许获取无线网络相关信息                           │
+│          │ android.permission.READ_PHONE_STATE: 读取手机识别码: 允许应用软件读取电话状态                          │
+└──────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 核心权限信息                                                                                              ┃
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 应用获取的核心权限信息                                                                                    │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 中危                                                                                                      │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ android.permission.RECORD_AUDIO: 录音或通话录音: 允许应用获取麦克风输入数据信息                           │
+│          │ android.permission.ACCESS_COARSE_LOCATION: 访问大致位置: 允许应用软件通过WiFi或移动基站获取粗略的位置信息 │
+│          │ android.permission.ACCESS_FINE_LOCATION: 访问精确位置: 允许应用软件通过GPS获取精确的位置信息              │
+│          │ android.permission.CAMERA: 使用摄像头: 允许应用软件调用设备的摄像头进行拍摄、录像                         │
+└──────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 特殊权限信息                                                                                ┃
+├──────────┼─────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 应用获取的特殊权限信息                                                                      │
+├──────────┼─────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                                                                        │
+├──────────┼─────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ android.permission.SYSTEM_ALERT_WINDOW: 悬浮窗: 允许应用显示在其他应用之上，或后台弹出界面  │
+│          │ android.permission.REQUEST_INSTALL_PACKAGES: 请求安装应用: 允许应用安装其他应用             │
+└──────────┴─────────────────────────────────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 其他权限信息                                         ┃
+├──────────┼──────────────────────────────────────────────────────┤
+│ 项目描述 │ 应用获取的其他权限信息                               │
+├──────────┼──────────────────────────────────────────────────────┤
+│ 危险等级 │ 信息                                                 │
+├──────────┼──────────────────────────────────────────────────────┤
+│ 项目描述 │ com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE       │
+│          │ android.permission.READ_LOGS                         │
+│          │ com.techwolf.kanzhun.app.permission.MIPUSH_RECEIVE   │
+│          │ android.permission.GET_TASKS                         │
+│          │ com.techwolf.kanzhun.app.permission.PROCESS_PUSH_MSG │
+│          │ com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE        │
+└──────────┴──────────────────────────────────────────────────────┘
 ┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ 检测项目 ┃ 签名信息                                                                                               ┃
 ├──────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────┤
@@ -152,6 +190,9 @@ Finish
 │          │                                                                                                        │
 │          │                                                                                                        │
 └──────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Warning:
+证书 使用的 SHA1withRSA 签名算法被视为存在安全风险。此算法将在未来的更新中被禁用。
 ┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ 检测项目 ┃ 证书指纹                                                                                                 ┃
 ├──────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
@@ -167,7 +208,7 @@ Finish
 │          │          SHA1: A5:79:DE:8A:6D:BD:5E:DB:57:58:23:C5:B8:6A:CE:00:3D:F6:DC:40                               │
 │          │          SHA256:                                                                                         │
 │          │ 11:FD:51:80:47:58:9C:9B:FC:BB:BB:45:71:19:17:D7:7E:E9:2F:21:4C:AE:31:39:A7:46:D1:04:9F:63:51:90          │
-│          │ 签名算法名称: SHA1withRSA                                                                                │
+│          │ 签名算法名称: SHA1withRSA (弱)                                                                           │
 │          │ 主体公共密钥算法: 2048 位 RSA 密钥                                                                       │
 │          │ 版本: 1                                                                                                  │
 │          │                                                                                                          │
@@ -254,6 +295,227 @@ Finish
 │ 项目描述 │ com.hijack.demo.hijack.QQActivity.smali : 301 │
 │          │ com.hijack.demo.hijack.QQActivity.smali : 317 │
 └──────────┴───────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ URL泄露检测                ┃
+├──────────┼────────────────────────────┤
+│ 项目描述 │ 检测App泄露的URL           │
+├──────────┼────────────────────────────┤
+│ 危险等级 │ 低危                       │
+├──────────┼────────────────────────────┤
+│ 项目描述 │ https://api.test.com       │
+│          │ https://www.uat.123.com    │
+│          │ http://thoughts.gmail.com  │
+│          │ http://192.168.123.32:7890 │
+└──────────┴────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ WebView明文存储密码检测                      ┃
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ 检测App程序是否存在WebView明文存储密码风险   │
+├──────────┼──────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                         │
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.MyWebView.smali : 120 │
+└──────────┴──────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ Webview绕过证书校验漏洞                                           ┃
+├──────────┼───────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App应用的Webview组件是否在发现https网页证书错误后继续加载页面 │
+├──────────┼───────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                                              │
+├──────────┼───────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.MyWebView$3.smali : 88                     │
+└──────────┴───────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ WebView远程代码执行检测                            ┃
+├──────────┼────────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App应用的Webview组件中是否存在远程代码执行漏洞 │
+├──────────┼────────────────────────────────────────────────────┤
+│ 危险等级 │ 高危                                               │
+├──────────┼────────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.MyWebView.smali : 129       │
+└──────────┴────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ WebView远程调试检测                          ┃
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ 检测App程序是否存在Webview远程调试风险       │
+├──────────┼──────────────────────────────────────────────┤
+│ 危险等级 │ 中危                                         │
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.MyWebView.smali : 153 │
+└──────────┴──────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ PendingIntent错误使用Intent风险检测                              ┃
+├──────────┼──────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App中是否存在PendingIntent使用了隐式Intent或者空Intent的风险 │
+├──────────┼──────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                                             │
+├──────────┼──────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.TestIntent.smali : 243                    │
+│          │ com.hijack.demo.hijack.TestIntent.smali : 131                    │
+└──────────┴──────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 应用数据任意备份风险检测                ┃
+├──────────┼─────────────────────────────────────────┤
+│ 项目描述 │ 检测App是否存在应用数据被任意备份的风险 │
+├──────────┼─────────────────────────────────────────┤
+│ 危险等级 │ 中危                                    │
+├──────────┼─────────────────────────────────────────┤
+│ 项目描述 │ android:allowBackup = true              │
+└──────────┴─────────────────────────────────────────┘
+/bin/sh: readelf: command not found
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ So文件破解风险检测                ┃
+├──────────┼───────────────────────────────────┤
+│ 项目描述 │ 检测Apk中的so文件是否可被破解读取 │
+├──────────┼───────────────────────────────────┤
+│ 危险等级 │ 中危                              │
+├──────────┼───────────────────────────────────┤
+│ 项目描述 │ armeabi-v7a/libijkffmpeg.so       │
+│          │                                   │
+└──────────┴───────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 全局可读写风险检测                                                         ┃
+├──────────┼────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App的SharedPreferences,getDir,openFileOutput函数是否存在全局可读写风险 │
+├──────────┼────────────────────────────────────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                                                       │
+├──────────┼────────────────────────────────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.TestDatabase.smali : 201                            │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 196                            │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 162                            │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 133                            │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 128                            │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 99                             │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 94                             │
+└──────────┴────────────────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ AES/DES弱加密风险检测                        ┃
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ 检测App中是否存在AES/DES弱加密风险           │
+├──────────┼──────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                         │
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.Encryptor.smali : 188 │
+│          │ com.hijack.demo.hijack.Encryptor.smali : 150 │
+│          │ com.hijack.demo.hijack.Encryptor.smali : 142 │
+│          │ com.hijack.demo.hijack.Encryptor.smali : 134 │
+│          │ com.hijack.demo.hijack.Encryptor.smali : 126 │
+│          │ com.hijack.demo.hijack.Encryptor.smali : 118 │
+│          │ com.hijack.demo.hijack.Encryptor.smali : 110 │
+│          │ com.hijack.demo.hijack.RSA.smali : 344       │
+│          │ com.hijack.demo.hijack.RSA.smali : 284       │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 304 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 296 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 288 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 280 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 272 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 264 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 239 │
+└──────────┴──────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ SQL注入检测                                      ┃
+├──────────┼──────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App是否存在SQL注入的利用条件                 │
+├──────────┼──────────────────────────────────────────────────┤
+│ 危险等级 │ 中危                                             │
+├──────────┼──────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.PersonService.smali : 54  │
+│          │ com.hijack.demo.hijack.PersonService.smali : 87  │
+│          │ com.hijack.demo.hijack.PersonService.smali : 238 │
+│          │ com.hijack.demo.hijack.PersonService.smali : 348 │
+│          │ com.hijack.demo.hijack.PersonService.smali : 407 │
+└──────────┴──────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 日志泄漏风险检测                                          ┃
+├──────────┼───────────────────────────────────────────────────────────┤
+│ 项目描述 │ 检测Apk中是否存在日志泄露风险，重点检测Log与print函数     │
+├──────────┼───────────────────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                                      │
+├──────────┼───────────────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.MyWebView$2.smali : 120            │
+│          │ com.hijack.demo.hijack.MainActivity.smali : 195           │
+│          │ com.hijack.demo.hijack.MainActivity.smali : 314           │
+│          │ com.hijack.demo.hijack.RSA.smali : 699                    │
+│          │ com.hijack.demo.hijack.SocketServer.smali : 67            │
+│          │ com.hijack.demo.hijack.SocketServer.smali : 146           │
+│          │ com.hijack.demo.hijack.MyWebView$3.smali : 65             │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 314              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 319              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 324              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 329              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 336              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 341              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 348              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 353              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 358              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 363              │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 368              │
+│          │ com.hijack.demo.hijack.DexSo.smali : 601                  │
+│          │ com.hijack.demo.hijack.DexSo.smali : 799                  │
+│          │ com.hijack.demo.hijack.UdpClient$SocketThread.smali : 58  │
+│          │ com.hijack.demo.hijack.UdpClient$SocketThread.smali : 160 │
+│          │ com.hijack.demo.hijack.UdpClient$SocketThread.smali : 200 │
+│          │ com.hijack.demo.hijack.UdpClient$SocketThread.smali : 333 │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 59              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 64              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 69              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 74              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 79              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 84              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 89              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 96              │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 103             │
+└──────────┴───────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 数据库文件任意读写检测                          ┃
+├──────────┼─────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App是否存在数据库文件任意读写风险           │
+├──────────┼─────────────────────────────────────────────────┤
+│ 危险等级 │ 中危                                            │
+├──────────┼─────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.TestDatabase.smali : 237 │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 165 │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 102 │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 68  │
+│          │ com.hijack.demo.hijack.TestDatabase.smali : 34  │
+└──────────┴─────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ SDCARD加载so检测                                ┃
+├──────────┼─────────────────────────────────────────────────┤
+│ 项目描述 │ 检测App程序中的是否存在从sdcard动态加载so的风险 │
+├──────────┼─────────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                            │
+├──────────┼─────────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.DexSo.smali : 861        │
+│          │ com.hijack.demo.hijack.DexSo.smali : 666        │
+│          │ com.hijack.demo.hijack.DexSo.smali : 640        │
+└──────────┴─────────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ 剪切板敏感信息泄露检测                        ┃
+├──────────┼───────────────────────────────────────────────┤
+│ 项目描述 │ 检测App是否存在剪切板敏感数据泄露风险         │
+├──────────┼───────────────────────────────────────────────┤
+│ 危险等级 │ 中危                                          │
+├──────────┼───────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.QQActivity.smali : 259 │
+│          │ com.hijack.demo.hijack.QQActivity.smali : 256 │
+└──────────┴───────────────────────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 检测项目 ┃ Java反射检测                                 ┃
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ 检测App程序是否存在反射调用风险              │
+├──────────┼──────────────────────────────────────────────┤
+│ 危险等级 │ 低危                                         │
+├──────────┼──────────────────────────────────────────────┤
+│ 项目描述 │ com.hijack.demo.hijack.Decryptor.smali : 252 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 258 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 265 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 277 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 288 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 294 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 301 │
+│          │ com.hijack.demo.hijack.Decryptor.smali : 315 │
+└──────────┴──────────────────────────────────────────────┘
 ┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ 检测项目 ┃ FFMPEG任意文件读取检测                                                     ┃
 ├──────────┼────────────────────────────────────────────────────────────────────────────┤
