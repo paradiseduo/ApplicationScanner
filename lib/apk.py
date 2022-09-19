@@ -38,9 +38,7 @@ def apkScan(inputfile, save):
     # 解压apk包
     console.print('\n[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
     filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
-    strline = f'java -jar \'{apktool}\' d -f \'{inputfile}\' -o \'{filePath}\' --only-main-classes'
-
-    subprocess.Popen(strline, shell=True).communicate()
+    RunCMD(f'java -jar \'{apktool}\' d -f \'{inputfile}\' -o \'{filePath}\' --only-main-classes').execute()
     console.print('[bold green]Finish[/bold green]')
     filePath = os.path.abspath(filePath)
     try:
@@ -63,10 +61,7 @@ def apkScan(inputfile, save):
 
 
 def appSign(filePath):
-    strline = f'java -jar {apksigner} verify -v --print-certs \'{filePath}\''
-    p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    std = p.communicate()
-    arr = std[0].decode('utf-8', 'replace').split('\n')
+    arr = RunCMD(f'java -jar {apksigner} verify -v --print-certs \'{filePath}\'').execute()[0].decode('utf-8', 'replace').split('\n')
     result = ''
     for line in arr:
         if 'WARNING:' not in line:

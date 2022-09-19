@@ -22,11 +22,11 @@ tasks = []
 
 
 class RunCMD:
-    def __init__(self):
+    def __init__(self, cmd):
         self.p = None
-        self.cmd = None
+        self.cmd = cmd
 
-    def run_cmd(self):
+    def execute(self):
         self.p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         tasks.append(self)
         return self.p.communicate()

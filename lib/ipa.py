@@ -45,9 +45,7 @@ def ipaScan(filePath, save):
                 for filename in filenames:
                     if '.' not in filename:
                         newPath = os.path.join(parent, filename)
-                        p = subprocess.Popen(f'file \'{newPath}\'', shell=True, stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE)
-                        arr = p.communicate()[0].decode('utf-8', 'replace').split('\n')
+                        arr = RunCMD(f'file \'{newPath}\'').execute()[0].decode('utf-8', 'replace').split('\n')
                         for item in arr:
                             if 'Mach-O' in item:
                                 appBinPath = newPath
@@ -79,11 +77,9 @@ def ipaScan(filePath, save):
 def ipatool(inputfile):
     appName = ''
     filePath = f'Payload{randomStr(6)}'
-    subprocess.call(f'cp \'{inputfile}\' test.zip && unzip -o test.zip', shell=True, stdout=subprocess.DEVNULL)
-    subprocess.call(f'rm -rf test.zip', shell=True, stdout=subprocess.DEVNULL)
-    subprocess.call(f'mv Payload \'{filePath}\'', shell=True, stdout=subprocess.DEVNULL)
-    p = subprocess.Popen(f'cd \'{filePath}\' && ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    arr = p.communicate()[0].decode('utf-8', 'replace').split('\n')
+    RunCMD(f'unzip -o \'{inputfile}\' -d .').execute()
+    RunCMD(f'mv Payload \'{filePath}\'').execute()
+    arr = RunCMD(f'cd \'{filePath}\' && ls').execute()[0].decode('utf-8', 'replace').split('\n')
     for item in arr:
         if '.app' in item:
             # 获取APP名称
@@ -150,9 +146,7 @@ def reverse(filePath, appBinPath):
     strline5 = f'cat \'{stringDumpPath}\' | grep @rpath | grep -v libswift > \'{os.path.abspath(filePath)}\'/RpathDump'
     cmds = [strline1, strline2, strline3, strline4, strline5]
     for strline in cmds:
-        runner = RunCMD()
-        runner.cmd = strline
-        runner.run_cmd()
+        RunCMD(strline).execute()
     while len(tasks) > 0:
         for i, item in enumerate(tasks):
             item.is_running
@@ -244,9 +238,7 @@ def iOSCert(appInfoPath, filePath, appBinPath):
     set_values_for_key(key='IOSCERTIFICATEINFORMATIONINFO', zh='应用打包使用的证书信息',
                        en='Certificate information used for application packaging')
     if platform.system() == 'Darwin':
-        strline = f'codesign -vv -d \'{appBinPath}\''
-        p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        result = p.communicate()[1].decode('utf-8', 'ignore')
+        result = RunCMD(f'codesign -vv -d \'{appBinPath}\'').execute()[1].decode('utf-8', 'ignore')
         Info(key='Info', title=get_value('IOSCERTIFICATEINFORMATION'), level=0,
              info=get_value('IOSCERTIFICATEINFORMATIONINFO'), result=result).description()
     else:
