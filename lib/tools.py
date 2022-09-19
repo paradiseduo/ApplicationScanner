@@ -133,3 +133,10 @@ def getSmalis(arrs):
             if path not in paths:
                 paths.append(path)
     return paths
+
+
+def add_escape(value):
+    reserved_chars = r'''?&|!{}[]()^~*:\\"'+- '''
+    replace = ['\\' + l for l in reserved_chars]
+    trans = str.maketrans(dict(zip(reserved_chars, replace)))
+    return value.translate(trans)

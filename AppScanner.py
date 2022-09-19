@@ -2,14 +2,13 @@
 # -*- coding:utf-8 -*-
 import getopt
 import sys
-import os
 
 from lib import translation
 from lib.apk import apkScan
 from lib.ipa import ipaScan
-from lib.tools import console
+from lib.sdk import *
 
-Version = 2.2
+Version = 2.3
 
 console.print('''
                       _____                                 
@@ -33,6 +32,7 @@ def printUse():
         -i <inputPath>
         -s save cache (Default clear cache)
         -l language ['zh', 'en'] (Default zh)
+        -f <CheckList Path>
     ''', style='green')
 
 
@@ -41,8 +41,9 @@ translation.changeLanguage('zh')
 
 def main(argv):
     inputfile = ''
+    checklist = ''
     try:
-        opts, args = getopt.getopt(argv, "hsi:l:", ["ipath=language="])
+        opts, args = getopt.getopt(argv, "hsi:l:f:", ["inputPath=language=checklist="])
     except getopt.GetoptError:
         printUse()
         sys.exit(2)
@@ -52,10 +53,12 @@ def main(argv):
         if opt == '-h':
             printUse()
             sys.exit()
-        elif opt in ("-i", "--ipath"):
+        elif opt in ("-i", "--inputPath"):
             inputfile = arg
         elif opt in ("-l", "--language"):
             translation.changeLanguage(arg)
+        elif opt in ("-f", "--checklist"):
+            checklist = arg
         elif opt == '-s':
             save = True
 
@@ -67,6 +70,16 @@ def main(argv):
             apkScan(inputfile, save)
         elif '.ipa' in inputfile:
             ipaScan(inputfile, save)
+        elif inputfile.endswith('.framework'):
+            checkFramework(inputfile, checklist)
+        elif inputfile.endswith('.aar'):
+            checkAar(inputfile, checklist)
+        elif inputfile.endswith('.a'):
+            checkA(inputfile, checklist)
+        elif inputfile.endswith('.so'):
+            checkSo(inputfile, checklist)
+        elif inputfile.endswith('.jar'):
+            checkJar(inputfile, checklist)
         else:
             console.print('Application must be *.apk or *.ipa', style='red bold')
             sys.exit(2)

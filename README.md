@@ -10,7 +10,7 @@
          | |   | |
          |_|   |_|
 
-                             ParadiseDuo  [2.2]
+                             ParadiseDuo  [2.3]
 
     Usage:
         python3 AppScanner.py -i *.apk/*.ipa
@@ -18,7 +18,8 @@
         -h help
         -i <inputPath>
         -s save cache (Default clear cache)
-	-l language ['zh', 'en'] (Default zh)
+        -l language ['zh', 'en'] (Default zh)
+        -f <CheckList Path>
 ```
 ## Requirement
 * Only support Mac/Linux, no Windows version.
@@ -41,6 +42,21 @@
 > pip install -r requirements.txt
 > python3 AppScanner.py -i xxx.apk
 ```
+### Scan SDK
+Now support scan .framework/.a/.so/.aar/.jar file
+```bash
+> python3 AppScanner.py -i test.framework -f checklist
+```
+checklist is a text file like this(support scan Chinese):
+```bash
+dlsym
+dlopen
+respondsToSelector
+performSelector
+method_exchangeImplementations
+支付宝
+微信
+```
 
 ## Example
 You can download [test.apk](https://github.com/paradiseduo/paradiseduo/raw/master/test.apk) have a try.
@@ -58,10 +74,10 @@ You can download [test.apk](https://github.com/paradiseduo/paradiseduo/raw/maste
          | |   | |
          |_|   |_|
 
-                             ParadiseDuo  [2.2]
+                             ParadiseDuo  [2.3]
 
 Unzip apk /Users/admin/Downloads/test.apk
-I: Using Apktool 2.6.0 on test.apk
+I: Using Apktool 2.6.1 on test.apk
 I: Loading resource table...
 I: Decoding AndroidManifest.xml with resources...
 I: Loading resource table from file: /Users/admin/Library/apktool/framework/1.apk
