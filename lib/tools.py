@@ -96,10 +96,7 @@ def jsBeautify(jsFiles):
     for file in jsFiles:
         beautifyFile = file[:-3] + '1.js'
         newFiles.append(beautifyFile)
-        strline = 'js-beautify ' + file + ' > ' + beautifyFile
-        runner = RunCMD()
-        runner.cmd = strline
-        runner.run_cmd()
+        RunCMD(f"js-beautify \'{file}\' > \'{beautifyFile}\'").execute()
     while len(tasks) > 0:
         for item in tasks:
             item.is_running
