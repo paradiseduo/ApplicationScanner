@@ -10,10 +10,10 @@
          | |   | |
          |_|   |_|
 
-                             ParadiseDuo  [2.3]
+                             ParadiseDuo  [2.4]
 
     Usage:
-        python3 AppScanner.py -i *.apk/*.ipa
+        python3 AppScanner.py -i *.apk/*.ipa/*.aab
 
         -h help
         -i <inputPath>

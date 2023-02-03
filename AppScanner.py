@@ -8,7 +8,7 @@ from lib.apk import apkScan
 from lib.ipa import ipaScan
 from lib.sdk import *
 
-Version = 2.3
+Version = 2.4
 
 console.print('''
                       _____                                 
@@ -26,7 +26,7 @@ console.print('                             [italic green]ParadiseDuo[/italic gr
 def printUse():
     console.print('''
     Usage:      
-        python3 AppScanner.py -i *.apk/*.ipa
+        python3 AppScanner.py -i *.apk/*.ipa/*.aab
     
         -h help
         -i <inputPath>
@@ -66,9 +66,9 @@ def main(argv):
         if not os.path.exists(inputfile):
             console.print('File not exist!', style='red bold')
             sys.exit(0)
-        if '.apk' in inputfile:
+        if inputfile.endswith('.apk') or inputfile.endswith('.aab'):
             apkScan(inputfile, save)
-        elif '.ipa' in inputfile:
+        elif inputfile.endswith('.ipa'):
             ipaScan(inputfile, save)
         elif inputfile.endswith('.framework'):
             checkFramework(inputfile, checklist)

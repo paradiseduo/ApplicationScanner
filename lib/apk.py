@@ -11,6 +11,8 @@ from pathlib import Path
 
 apktool = str(Path(__file__).parents[1] / 'ThirdTools/apktool.jar')
 apksigner = str(Path(__file__).parents[1] / 'ThirdTools/apksigner.jar')
+bundletool = str(Path(__file__).parents[1] / 'ThirdTools/bundletool.jar')
+certificate = str(Path(__file__).parents[1] / 'ThirdTools/Certificate')
 
 scanners = {}
 
@@ -35,12 +37,24 @@ from . import Android  # 执行导入包到 scanners
 
 
 def apkScan(inputfile, save):
-    # 解压apk包
-    console.print('\n[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
-    filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
-    RunCMD(f'java -jar \'{apktool}\' d -f \'{inputfile}\' -o \'{filePath}\' --only-main-classes').execute()
-    console.print('[bold green]Finish[/bold green]')
-    filePath = os.path.abspath(filePath)
+    if inputfile.endswith('.apk'):
+        # 解压apk包
+        console.print('\n[magenta]Unzip apk [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
+        filePath = inputfile.replace('.apk', '').split('/')[-1] + randomStr(6)
+        RunCMD(f'java -jar \'{apktool}\' d -f \'{inputfile}\' -o \'{filePath}\' --only-main-classes').execute()
+        console.print('[bold green]Finish[/bold green]')
+        filePath = os.path.abspath(filePath)
+    else:
+        # 解压aab包
+        console.print('\n[magenta]Unzip aab [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
+        filePath = inputfile.replace('.aab', '').split('/')[-1] + randomStr(6)
+        RunCMD(f'java -jar \'{bundletool}\' build-apks --mode=universal --bundle=\'{inputfile}\' --output=applicationScanner.apks --ks=\'{certificate}\' --ks-pass=pass:123456 --ks-key-alias=dw --key-pass=pass:123456').execute()
+        RunCMD(f'unzip -o applicationScanner.apks -d ApplicationScannerTemp').execute()
+        apkPath = './' + 'ApplicationScannerTemp/universal.apk'
+        RunCMD(f'java -jar \'{apktool}\' d -f \'{apkPath}\' -o \'{filePath}\' --only-main-classes').execute()
+        console.print('[bold green]Finish[/bold green]')
+        os.remove('applicationScanner.apks')
+        shutil.rmtree('./ApplicationScannerTemp')
     try:
         apkInfo(filePath)
         permissionAndExport(filePath)
