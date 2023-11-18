@@ -21,7 +21,10 @@ console.print('''
          |_|   |_|                                          
 ''', style='blink bold green')
 
-console.print('                             [italic green]ParadiseDuo[/italic green]  [{}]'.format(Version))
+console.print(
+    f'                             [italic green]ParadiseDuo[/italic green]  [{Version}]'
+)
+
 
 def printUse():
     console.print('''
@@ -38,6 +41,7 @@ def printUse():
 
 translation.init()
 translation.changeLanguage('zh')
+
 
 def main(argv):
     inputfile = ''

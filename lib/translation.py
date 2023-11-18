@@ -10,7 +10,7 @@ def init():
 
 def changeLanguage(l):
     global language
-    if l == 'zh' or l == 'en':
+    if l in ['zh', 'en']:
         language = l
 
 
@@ -29,10 +29,7 @@ def set_en_value(key, value):
 
 def get_value(key):
     try:
-        if language == 'zh':
-            return zh_global_dict[key]
-        else:
-            return en_global_dict[key]
-    except:
-        print('Read ' + key + ' Failed\r\n')
+        return zh_global_dict[key] if language == 'zh' else en_global_dict[key]
+    except Exception:
+        print(f'Read {key}' + ' Failed\r\n')
         return key

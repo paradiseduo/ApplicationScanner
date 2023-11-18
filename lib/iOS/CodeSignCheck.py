@@ -1,9 +1,10 @@
+import platform
+import subprocess
+
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-import platform
-import subprocess
-from lib.translation import *
 
 
 class CodeSignCheck(Base):
@@ -16,12 +17,11 @@ class CodeSignCheck(Base):
                            en='It is not packaged with a release certificate and cannot be put on the App Store')
 
         TITLE = get_value('CODESIGNCHECKTITLE')
-        LEVEL = 1
         INFO = get_value('CODESIGNCHECKINFO')
 
         hasEXP = True
         if platform.system() == 'Darwin':
-            strline = 'codesign -vv -d ' + self.appBinPath
+            strline = f'codesign -vv -d {self.appBinPath}'
             p = subprocess.Popen(strline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out = p.communicate()[1].decode('utf-8', 'ignore')
             arr = out.split('\n')
@@ -31,14 +31,16 @@ class CodeSignCheck(Base):
                     if 'Apple Distribution' in result:
                         hasEXP = False
         else:
-            with open(self.appPath+'/ClassDump', 'r') as f:
+            with open(f'{self.appPath}/ClassDump', 'r') as f:
                 lines = f.readlines()
                 for line in lines:
                     line = line.strip()
                     if 'Apple Distribution' in line:
                         hasEXP = False
         if hasEXP:
-            Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('CODESIGNCHECKRESULT')).description()
+            LEVEL = 1
+            Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                 result=get_value('CODESIGNCHECKRESULT')).description()
 
 
 register(CodeSignCheck)

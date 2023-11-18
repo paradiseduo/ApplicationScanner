@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class SoLoadCheck(Base):
@@ -17,7 +17,8 @@ class SoLoadCheck(Base):
         INFO = get_value('SOLOADCHECHINFO')
 
         strline = cmdString(
-            'grep -r "Ljava/lang/System;->load(Ljava/lang/String;)V" ' + self.appPath)
+            f'grep -r "Ljava/lang/System;->load(Ljava/lang/String;)V" {self.appPath}'
+        )
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
@@ -39,7 +40,7 @@ class SoLoadCheck(Base):
                                         ve = lll.find('}')
                                         v = lll[vs:ve]
                                         if v in line:
-                                            result = name + ' : ' + str(count - i)
+                                            result = f'{name} : {str(count - i)}'
                                             if result not in results:
                                                 results.append(result)
                                             break

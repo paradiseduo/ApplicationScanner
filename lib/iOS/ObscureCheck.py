@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 blackList = ['Login', 'Helper', 'Manager']
 
@@ -18,7 +18,7 @@ class ObscureCheck(Base):
         INFO = get_value('OBSCURECHECKINFO')
 
         results = []
-        with open(self.appPath+'/ClassDump', 'r') as f:
+        with open(f'{self.appPath}/ClassDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.strip()

@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class URLCheck(Base):
@@ -16,7 +16,7 @@ class URLCheck(Base):
         INFO = get_value('IOSURLCHECKINFO')
 
         results = []
-        with open(self.appPath + '/URLDump', 'r') as f:
+        with open(f'{self.appPath}/URLDump', 'r') as f:
             lines = f.readlines()
             for url in lines:
                 url = url.strip()

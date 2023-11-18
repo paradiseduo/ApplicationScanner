@@ -1,8 +1,8 @@
+from lib.translation import *
 from ..Base import Base
+from ..apk import register
 from ..info import Info
 from ..tools import *
-from ..apk import register
-from lib.translation import *
 
 
 class LogCheck(Base):
@@ -22,12 +22,10 @@ class LogCheck(Base):
         for path in paths:
             with open(path, 'r') as f:
                 lines = f.readlines()
-                index = 0
                 name = getFileName(path)
-                for line in lines:
-                    index += 1
+                for index, line in enumerate(lines, start=1):
                     if 'Landroid/util/Log;->d' in line or 'Landroid/util/Log;->v' in line or 'Ljava/io/PrintStream;->print' in line:
-                        result = name + ' : ' + str(index)
+                        result = f'{name} : {index}'
                         if result not in results:
                             results.append(result)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()

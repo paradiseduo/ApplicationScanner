@@ -1,8 +1,9 @@
+import json
+
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-import json
-from lib.translation import *
 
 
 class SignatureCheck(Base):
@@ -18,10 +19,11 @@ class SignatureCheck(Base):
         LEVEL = 2
         INFO = get_value('SIGNATURECHECKINFO')
 
-        with open(self.appPath + '/macho.json', 'r') as f:
+        with open(f'{self.appPath}/macho.json', 'r') as f:
             dic = json.loads(f.read())
             if dic['signatrue'] != 'LOAD_COMMAND_TYPES.CODE_SIGNATURE':
-                Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('SIGNATURECHECKRESULT')).description()
+                Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                     result=get_value('SIGNATURECHECKRESULT')).description()
 
 
 register(SignatureCheck)

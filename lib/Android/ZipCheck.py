@@ -16,17 +16,15 @@ class ZipCheck(Base):
         LEVEL = 3
         INFO = get_value('ZIPDCHECHINFO')
 
-        strline = cmdString('grep -r "Ljava/util/zip/ZipInputStream" ' + self.appPath)
+        strline = cmdString(f'grep -r "Ljava/util/zip/ZipInputStream" {self.appPath}')
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
             with open(path, 'r') as f:
                 lines = f.readlines()
                 count = len(lines)
-                index = 0
                 name = getFileName(path)
-                for line in lines:
-                    index += 1
+                for index, line in enumerate(lines, start=1):
                     isExp = True
                     if 'Ljava/util/zip/ZipEntry;->getName()Ljava/lang/String' in line:
                         for i in range(index, count):
@@ -35,15 +33,13 @@ class ZipCheck(Base):
                                 isExp = False
                             if '.end method' in p:
                                 if isExp:
-                                    result = name + ' : ' + str(index)
+                                    result = f'{name} : {index}'
                                     if result not in results:
                                         results.append(result)
                                 break
                 lines.reverse()
                 lineNume = len(lines)
-                index = 0
-                for line in lines:
-                    index += 1
+                for index, line in enumerate(lines, start=1):
                     lineNume -= 1
                     isExp = True
                     if 'Ljava/util/zip/ZipEntry;->getName()Ljava/lang/String' in line:
@@ -60,7 +56,7 @@ class ZipCheck(Base):
                                     if '.method' in pp:
                                         if not isExp:
                                             # 因为smali文件最后一行为空，而第一行不为空，因此倒叙后算index要加1才跟正序的index一致
-                                            result = name + ' : ' + str(lineNume+1)
+                                            result = f'{name} : {str(lineNume + 1)}'
                                             if result in results:
                                                 results.remove(result)
                                         break

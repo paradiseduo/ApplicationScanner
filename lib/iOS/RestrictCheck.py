@@ -1,8 +1,9 @@
+import json
+
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-import json
-from lib.translation import *
 
 
 class RestrictCheck(Base):
@@ -18,10 +19,11 @@ class RestrictCheck(Base):
         LEVEL = 2
         INFO = get_value('RESTRICTCHECKINFO')
 
-        with open(self.appPath + '/macho.json', 'r') as f:
+        with open(f'{self.appPath}/macho.json', 'r') as f:
             dic = json.loads(f.read())
             if not dic['has_restrict']:
-                Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('RESTRICTCHECKRESULT')).description()
+                Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                     result=get_value('RESTRICTCHECKRESULT')).description()
 
 
 register(RestrictCheck)

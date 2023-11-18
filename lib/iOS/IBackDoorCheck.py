@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class IBackDoorCheck(Base):
@@ -17,12 +17,13 @@ class IBackDoorCheck(Base):
         LEVEL = 3
         INFO = get_value('IBACKDOORCHECKINFO')
 
-        with open(self.appPath + '/StringDump', 'r') as f:
+        with open(f'{self.appPath}/StringDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.strip()
                 if 'mobiSage' in line:
-                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('IBACKDOORCHECKRESULT')).description()
+                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                         result=get_value('IBACKDOORCHECKRESULT')).description()
                     break
 
 

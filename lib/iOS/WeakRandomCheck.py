@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class WeakRandomCheck(Base):
@@ -16,11 +16,11 @@ class WeakRandomCheck(Base):
         INFO = get_value('WEAKRANDOMCHECKINFO')
 
         results = []
-        with open(self.appPath + '/StringDump', 'r') as f:
+        with open(f'{self.appPath}/StringDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.strip().lower()
-                if ('@_rand' == line or '@_random' == line) and line not in results:
+                if line in ['@_rand', '@_random'] and line not in results:
                     results.append(line)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()
 

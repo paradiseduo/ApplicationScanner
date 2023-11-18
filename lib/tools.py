@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-import random
 import os
+import random
+import re
 import string
 import subprocess
-import re
-from rich.console import Console
 
+from rich.console import Console
 
 console = Console()
 
@@ -35,9 +35,8 @@ class RunCMD:
     def is_running(self):
         if self.p.poll() is None:
             return True
-        else:
-            tasks.remove(self)
-            return False
+        tasks.remove(self)
+        return False
 
     def stop(self):
         self.p.kill()
@@ -48,7 +47,7 @@ class RunCMD:
 
 
 def cmdString(strline):
-    return strline + ' | ' + grepThirdFile()
+    return f'{strline} | {grepThirdFile()}'
 
 
 def randomStr(num):
@@ -62,39 +61,37 @@ def getAPKFiles(dir):
     for root, dirs, files in dirlist:
         for file in files:
             path = os.path.join(root, file)
-            if file.endswith('.smali') or file.endswith('.so') or file.endswith('.xml') or file.endswith(
-                    '.yml') or file.endswith('.html'):
-                if '/original/' not in path:
-                    filesArray.append(path)
+            if (file.endswith('.smali') or file.endswith('.so') or file.endswith('.xml') or file.endswith(
+                                '.yml') or file.endswith('.html')) and '/original/' not in path:
+                filesArray.append(path)
             if file.endswith('.js'):
                 jsFiles.append(path)
             if file.endswith('.jsbundle') or file.endswith('.rnbundle'):
                 path = changeJSBundleFile(path)
                 jsFiles.append(path)
     newPaths = jsBeautify(jsFiles)
-    filesArray = filesArray + newPaths
+    filesArray += newPaths
     return filesArray
 
 
 def getFileName(path):
-    if len(path) > 0:
-        items = str(path).split('/')
-        dir = ''
-        start = -1
-        for i in range(len(items)):
-            if 'smali' in items[i] and '.smali' not in items[i]:
-                start = i
-            if start != -1 and start != i:
-                dir += items[i] + '.'
-        return dir[:-1]
-    else:
+    if len(path) <= 0:
         return ''
+    items = str(path).split('/')
+    dir = ''
+    start = -1
+    for i in range(len(items)):
+        if 'smali' in items[i] and '.smali' not in items[i]:
+            start = i
+        if start not in [-1, i]:
+            dir += f'{items[i]}.'
+    return dir[:-1]
 
 
 def jsBeautify(jsFiles):
     newFiles = []
     for file in jsFiles:
-        beautifyFile = file[:-3] + '1.js'
+        beautifyFile = f'{file[:-3]}1.js'
         newFiles.append(beautifyFile)
         RunCMD(f"js-beautify \'{file}\' > \'{beautifyFile}\'").execute()
     while len(tasks) > 0:
@@ -106,16 +103,15 @@ def jsBeautify(jsFiles):
 def changeJSBundleFile(filename):
     portion = os.path.splitext(filename)
     newName = filename
-    if portion[1] == '.jsbundle' or portion[1] == '.rnbundle':
-        newName = str(portion[0]) + '.js'
+    if portion[1] in ['.jsbundle', '.rnbundle']:
+        newName = f'{str(portion[0])}.js'
         os.rename(filename, newName)
     return newName
 
 
 def getURL(line):
     pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-    urls = re.findall(pattern, line[:-1])
-    return urls
+    return re.findall(pattern, line[:-1])
 
 
 def grepThirdFile():

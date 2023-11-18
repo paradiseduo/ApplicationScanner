@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class SQLInjectCheck(Base):
@@ -16,7 +16,9 @@ class SQLInjectCheck(Base):
         LEVEL = 2
         INFO = get_value('SQLCHECHINFO')
 
-        strline = cmdString('grep -r "Landroid/database/sqlite/SQLiteDatabase" ' + self.appPath)
+        strline = cmdString(
+            f'grep -r "Landroid/database/sqlite/SQLiteDatabase" {self.appPath}'
+        )
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
@@ -24,7 +26,7 @@ class SQLInjectCheck(Base):
                 lines = f.readlines()
                 count = len(lines)
                 name = getFileName(path)
-                for i in range(0, count):
+                for i in range(count):
                     line = lines[i]
                     if '?' in line and 'const-string' in line:
                         v = line.strip().split(' ')[1]
@@ -32,7 +34,7 @@ class SQLInjectCheck(Base):
                             ll = lines[j]
                             if v in ll and (
                                     'Landroid/database/sqlite/SQLiteDatabase;->rawQuery' in ll or 'Landroid/database/sqlite/SQLiteDatabase;->execSQL' in ll):
-                                result = name + ' : ' + str(j + 1)
+                                result = f'{name} : {str(j + 1)}'
                                 if result not in results:
                                     results.append(result)
                                 break

@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class NSLogCheck(Base):
@@ -17,11 +17,12 @@ class NSLogCheck(Base):
         LEVEL = 1
         INFO = get_value('LOGCHECKINFO')
 
-        with open(self.appPath + '/StringDump', 'r') as f:
+        with open(f'{self.appPath}/StringDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 if '@_NSLog' in line or '@_NSLogv' in line:
-                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('LOGCHECKRESULT')).description()
+                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                         result=get_value('LOGCHECKRESULT')).description()
                     break
 
 

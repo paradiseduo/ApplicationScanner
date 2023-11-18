@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class MallocCheck(Base):
@@ -17,12 +17,13 @@ class MallocCheck(Base):
         LEVEL = 1
         INFO = get_value('MALLOCCHECKINFO')
 
-        with open(self.appPath + '/StringDump', 'r') as f:
+        with open(f'{self.appPath}/StringDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.strip().lower()
                 if '@_malloc' in line:
-                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('MALLOCCHECKRESULT')).description()
+                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                         result=get_value('MALLOCCHECKRESULT')).description()
                     break
 
 

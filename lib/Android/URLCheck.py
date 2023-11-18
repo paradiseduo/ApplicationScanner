@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class URLCheck(Base):
@@ -24,7 +24,7 @@ class URLCheck(Base):
                 continue
             url = item.strip().split(':http')[-1]
             if not url.startswith('http'):
-                url = 'http' + url
+                url = f'http{url}'
             if url not in urls and '.' in url:
                 urls.append(url)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(urls)).description()

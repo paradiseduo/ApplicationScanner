@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class WeakHashCheck(Base):
@@ -16,11 +16,20 @@ class WeakHashCheck(Base):
         INFO = get_value('WEAKHASHCHECKINFO')
 
         results = []
-        with open(self.appPath + '/StringDump', 'r') as f:
+        with open(f'{self.appPath}/StringDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.strip()
-                if ('@_CC_SHA1_Final' == line or '@_CC_SHA1_Init' == line or '@_CC_SHA1_Update' == line or '@_CC_SHA1' == line) and line not in results:
+                if (
+                        line
+                        in [
+                    '@_CC_SHA1_Final',
+                    '@_CC_SHA1_Init',
+                    '@_CC_SHA1_Update',
+                    '@_CC_SHA1',
+                ]
+                        and line not in results
+                ):
                     results.append(line)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()
 

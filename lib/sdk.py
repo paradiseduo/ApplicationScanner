@@ -1,9 +1,9 @@
 import shutil
+from pathlib import Path
 
 from lib.info import Info
 from lib.tools import *
 from lib.translation import *
-from pathlib import Path
 
 dx = str(Path(__file__).parents[1] / 'ThirdTools/dx.jar')
 baksmali = str(Path(__file__).parents[1] / 'ThirdTools/baksmali-2.5.2.jar')
@@ -93,7 +93,7 @@ def scan(inputfile, checklist, machOArr):
                         if sf.find(bytes().fromhex(strrr)) != -1:
                             result.append(p)
             if len(result) > 0:
-                Info(key='Info', title=line, level=0, info=get_value('TFFC')+line,
+                Info(key='Info', title=line, level=0, info=get_value('TFFC') + line,
                      result="\n".join(result)).description()
     with open(checklist, 'r') as f:
         for line in f:

@@ -1,8 +1,9 @@
+import json
+
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-import json
-from lib.translation import *
 
 
 class ASLRCheck(Base):
@@ -18,14 +19,14 @@ class ASLRCheck(Base):
         LEVEL = 1
         INFO = get_value('ASLRCHECKINFO')
 
-        with open(self.appPath + '/macho.json', 'r') as f:
+        with open(f'{self.appPath}/macho.json', 'r') as f:
             try:
                 dic = json.loads(f.read())
                 if not dic['has_pie']:
                     Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
                          result=get_value('ASLRCHECKRESULT')).description()
                 return
-            except:
+            except Exception:
                 return
 
 

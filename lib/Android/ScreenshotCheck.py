@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class ScreenshotCheck(Base):
@@ -16,7 +16,7 @@ class ScreenshotCheck(Base):
         LEVEL = 1
         INFO = get_value('SCREENCHECHINFO')
 
-        strline = cmdString('grep -r ".super Landroid/app/Activity;" ' + self.appPath)
+        strline = cmdString(f'grep -r ".super Landroid/app/Activity;" {self.appPath}')
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:

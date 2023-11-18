@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class ReflectCheck(Base):
@@ -16,8 +16,7 @@ class ReflectCheck(Base):
         LEVEL = 1
         INFO = get_value('JAVACHECHINFO')
 
-        strline = cmdString(
-            'grep -r "Ljava/lang/reflect/" ' + self.appPath)
+        strline = cmdString(f'grep -r "Ljava/lang/reflect/" {self.appPath}')
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
@@ -26,10 +25,10 @@ class ReflectCheck(Base):
                 lines.reverse()
                 count = len(lines)
                 name = getFileName(path)
-                for i in range(0, count):
+                for i in range(count):
                     line = lines[i]
                     if 'Ljava/lang/reflect/' in line:
-                        result = name + ' : ' + str(i + 1)
+                        result = f'{name} : {str(i + 1)}'
                         if result not in results:
                             results.append(result)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()
