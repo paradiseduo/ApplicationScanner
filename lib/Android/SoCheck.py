@@ -1,8 +1,9 @@
 import os
-from ..Base import Base
-from ..info import Info
-from ..apk import register
+
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
 
 
 class SoCheck(Base):
@@ -16,11 +17,11 @@ class SoCheck(Base):
         LEVEL = 2
         INFO = get_value('SOCHECHINFO')
 
-        strline = 'find ' + self.appPath + ' -name *.so | grep -v "/original/"'
+        strline = f'find {self.appPath} -name *.so | grep -v "/original/"'
         arr = os.popen(strline).readlines()
         result = ''
         for item in arr:
-            strline = 'readelf -S ' + item[:-1]
+            strline = f'readelf -S {item[:-1]}'
             out = os.popen(strline).readlines()
             if 'section in the dynamic segment' not in out:
                 filePath = '/'.join(item[:-1].split('/')[-2:])

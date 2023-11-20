@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class IPCheck(Base):
@@ -15,16 +15,16 @@ class IPCheck(Base):
         LEVEL = 2
         INFO = get_value('IOSIPCHECKINFO')
 
-        with open(self.appPath + '/IPDump', 'r') as f:
+        with open(f'{self.appPath}/IPDump', 'r') as f:
             ips = f.readlines()
             ipArr = []
             for line in ips:
                 ip = line.strip()
                 ipCheck = ip.split('.')
                 if ipCheck[0].startswith('0') and len(ipCheck[0]) > 1 \
-                        or ipCheck[1].startswith('0') and len(ipCheck[1]) > 1 \
-                        or ipCheck[2].startswith('0') and len(ipCheck[2]) > 1 \
-                        or ipCheck[3].startswith('0') and len(ipCheck[3]) > 1:
+                            or ipCheck[1].startswith('0') and len(ipCheck[1]) > 1 \
+                            or ipCheck[2].startswith('0') and len(ipCheck[2]) > 1 \
+                            or ipCheck[3].startswith('0') and len(ipCheck[3]) > 1:
                     continue
                 # 排除0开头的，大概率是版本号，不是IP，(0.0.0.0也忽略，没啥意义)
                 if len(ipCheck[0]) == 1 and ipCheck[0] != '0':

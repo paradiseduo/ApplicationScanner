@@ -1,7 +1,7 @@
+from lib.translation import *
 from ..Base import Base
 from ..info import Info
 from ..ipa import register
-from lib.translation import *
 
 
 class SQLiteCheck(Base):
@@ -17,12 +17,13 @@ class SQLiteCheck(Base):
         LEVEL = 2
         INFO = get_value('SQLLITECHECKINFO')
 
-        with open(self.appPath + '/StringDump', 'r') as f:
+        with open(f'{self.appPath}/StringDump', 'r') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.strip().lower()
                 if 'fts3_tokenizer' in line:
-                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=get_value('SQLLITECHECKRESULT')).description()
+                    Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO,
+                         result=get_value('SQLLITECHECKRESULT')).description()
                     break
 
 

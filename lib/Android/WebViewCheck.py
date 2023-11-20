@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class WebViewCheck(Base):
@@ -22,7 +22,7 @@ class WebViewCheck(Base):
                 name = getFileName(path)
                 hasExp = True
                 vvv = 3
-                for i in range(0, count):
+                for i in range(count):
                     line = lines[i]
                     # 证书校验
                     if 'Landroid/webkit/SslErrorHandler;->proceed()V' in line:
@@ -35,7 +35,7 @@ class WebViewCheck(Base):
                         if result not in resultsRCE:
                             resultsRCE.append(result)
                 lines.reverse()
-                for i in range(0, count):
+                for i in range(count):
                     line = lines[i]
                     # Debug检测
                     if 'Landroid/webkit/WebView;->setWebContentsDebuggingEnabled(Z)V' in line:
@@ -85,12 +85,14 @@ class WebViewCheck(Base):
                            en='WebView plaintext storage password detection')
         set_values_for_key(key='WEBPASSWORDCHECHINFO', zh='检测App程序是否存在WebView明文存储密码风险',
                            en="Detect whether the App program has the risk of WebView storing passwords in plain text")
-        Info(key=self.__class__, title=get_value('WEBPASSWORDCHECKTITLE'), level=1, info=get_value('WEBPASSWORDCHECHINFO'),
+        Info(key=self.__class__, title=get_value('WEBPASSWORDCHECKTITLE'), level=1,
+             info=get_value('WEBPASSWORDCHECHINFO'),
              result='\n'.join(resultsPassword)).description()
 
         set_values_for_key(key='WEBCERTCHECKTITLE', zh='Webview绕过证书校验漏洞',
                            en='Webview bypasses certificate verification vulnerability')
-        set_values_for_key(key='WEBCERTCHECHINFO', zh='检测App应用的Webview组件是否在发现https网页证书错误后继续加载页面',
+        set_values_for_key(key='WEBCERTCHECHINFO',
+                           zh='检测App应用的Webview组件是否在发现https网页证书错误后继续加载页面',
                            en="Check whether the Webview component of the App application continues to load the page after finding the https webpage certificate error")
         Info(key=self.__class__, title=get_value('WEBCERTCHECKTITLE'), level=1, info=get_value('WEBCERTCHECHINFO'),
              result='\n'.join(resultsCert)).description()

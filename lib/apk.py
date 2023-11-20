@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-import traceback
 import shutil
-from xml.dom.minidom import parse
+import traceback
 import xml.dom.minidom
+from pathlib import Path
+
 from lib.info import Info
 from lib.tools import *
 from lib.translation import *
-from pathlib import Path
 
 apktool = str(Path(__file__).parents[1] / 'ThirdTools/apktool.jar')
 apksigner = str(Path(__file__).parents[1] / 'ThirdTools/apksigner.jar')
@@ -22,18 +22,13 @@ def register(scanner_class):
 
 
 def scanner(scanner_key):
-    scanner_class = scanners.get(scanner_key, None)
-    if scanner_class is None:
-        return None
-    return scanner_class
+    scanner_class = scanners.get(scanner_key)
+    return None if scanner_class is None else scanner_class
 
 
 def import_scanners(scanners_imports):
     for runner_import in scanners_imports:
         __import__(runner_import)
-
-
-from . import Android  # 执行导入包到 scanners
 
 
 def apkScan(inputfile, save):
@@ -48,8 +43,9 @@ def apkScan(inputfile, save):
         # 解压aab包
         console.print('\n[magenta]Unzip aab [/magenta][bold magenta]' + inputfile + '[/bold magenta]')
         filePath = inputfile.replace('.aab', '').split('/')[-1] + randomStr(6)
-        RunCMD(f'java -jar \'{bundletool}\' build-apks --mode=universal --bundle=\'{inputfile}\' --output=applicationScanner.apks --ks=\'{certificate}\' --ks-pass=pass:123456 --ks-key-alias=dw --key-pass=pass:123456').execute()
-        RunCMD(f'unzip -o applicationScanner.apks -d ApplicationScannerTemp').execute()
+        RunCMD(
+            f'java -jar \'{bundletool}\' build-apks --mode=universal --bundle=\'{inputfile}\' --output=applicationScanner.apks --ks=\'{certificate}\' --ks-pass=pass:123456 --ks-key-alias=dw --key-pass=pass:123456').execute()
+        RunCMD('unzip -o applicationScanner.apks -d ApplicationScannerTemp').execute()
         apkPath = './' + 'ApplicationScannerTemp/universal.apk'
         RunCMD(f'java -jar \'{apktool}\' d -f \'{apkPath}\' -o \'{filePath}\' --only-main-classes').execute()
         console.print('[bold green]Finish[/bold green]')
@@ -62,10 +58,9 @@ def apkScan(inputfile, save):
         fingerPrint(filePath)
 
         for key in scanners.keys():
-            c = scanner(key)
-            if c:
+            if c := scanner(key):
                 c(filePath).scan()
-    except:
+    except Exception:
         print(traceback.format_exc())
 
     if not save:
@@ -75,12 +70,11 @@ def apkScan(inputfile, save):
 
 
 def appSign(filePath):
-    arr = RunCMD(f'java -jar {apksigner} verify -v --print-certs \'{filePath}\'').execute()[0].decode('utf-8', 'replace').split('\n')
-    result = ''
-    for line in arr:
-        if 'WARNING:' not in line:
-            result += line + '\n'
-    if len(result) > 0:
+    arr = RunCMD(f'java -jar {apksigner} verify -v --print-certs \'{filePath}\'').execute()[0].decode('utf-8',
+                                                                                                      'replace').split(
+        '\n')
+    result = ''.join(line + '\n' for line in arr if 'WARNING:' not in line)
+    if result != "":
         result.rstrip()
         set_values_for_key(key='ANDROIDSIGNTITLE', zh='签名信息', en='Signature information')
         set_values_for_key(key='ANDROIDSIGNINFO', zh='签名验证详细信息', en='Signature verification details')
@@ -95,19 +89,22 @@ def fingerPrint(filePath):
     for line in out:
         rsa = line[:-1].lstrip()
     if len(rsa) > 0:
-        strline = f'keytool -printcert -file \'{filePath}\'/original/META-INF/{rsa}'
-        out = os.popen(strline).readlines()
-        result = ''
-        for line in out:
-            result += line
-        set_values_for_key(key='ANDROIDCERTTITLE', zh='证书指纹', en='Certificate fingerprint')
-        set_values_for_key(key='ANDROIDCERTINFO', zh='证书指纹信息', en='Certificate fingerprint information')
-        Info(title=get_value('ANDROIDCERTTITLE'), level=0, info=get_value('ANDROIDCERTINFO'),
-             result=result).description()
+        extract_and_display_certificate_info(filePath, rsa)
+
+
+# TODO Rename this here and in `fingerPrint`
+def extract_and_display_certificate_info(filePath, rsa):
+    strline = f'keytool -printcert -file \'{filePath}\'/original/META-INF/{rsa}'
+    out = os.popen(strline).readlines()
+    result = ''.join(out)
+    set_values_for_key(key='ANDROIDCERTTITLE', zh='证书指纹', en='Certificate fingerprint')
+    set_values_for_key(key='ANDROIDCERTINFO', zh='证书指纹信息', en='Certificate fingerprint information')
+    Info(title=get_value('ANDROIDCERTTITLE'), level=0, info=get_value('ANDROIDCERTINFO'),
+         result=result).description()
 
 
 def permissionAndExport(filePath):
-    XMLPath = filePath + '/AndroidManifest.xml'
+    XMLPath = f'{filePath}/AndroidManifest.xml'
     tree = xml.dom.minidom.parse(XMLPath)
     root = tree.documentElement
     package = root.getAttribute('package')
@@ -121,52 +118,61 @@ def permissionAndExport(filePath):
     permissionList = apkPermissionList(root)
     normalArray, dangerousArray, coreArray, specialArray, newPermissionList = apkPermissionLevel(permissionList)
     if len(normalArray) > 0:
-        result = ''
-        for (p, name, description) in normalArray:
-            result += f'{p}: {name}: {description}\n'
+        result = ''.join(
+            f'{p}: {name}: {description}\n'
+            for p, name, description in normalArray
+        )
         result = result.rstrip()
         set_values_for_key(key='ANDROIDNORMALPERMISSIONTITLE', zh='一般权限信息', en='Normal Permission information')
-        set_values_for_key(key='ANDROIDNORMALPERMISSIONINFO', zh='应用获取的一般权限信息', en='Application\'s normal permission information')
+        set_values_for_key(key='ANDROIDNORMALPERMISSIONINFO', zh='应用获取的一般权限信息',
+                           en='Application\'s normal permission information')
         Info(title=get_value('ANDROIDNORMALPERMISSIONTITLE'), level=0, info=get_value('ANDROIDNORMALPERMISSIONINFO'),
              result=result).description()
 
     if len(dangerousArray) > 0:
-        result = ''
-        for (p, name, description) in dangerousArray:
-            result += f'{p}: {name}: {description}\n'
+        result = ''.join(
+            f'{p}: {name}: {description}\n'
+            for p, name, description in dangerousArray
+        )
         result = result.rstrip()
-        set_values_for_key(key='ANDROIDDANGEROUSPERMISSIONTITLE', zh='危险权限信息', en='Dangerous Permission information')
-        set_values_for_key(key='ANDROIDDANGEROUSPERMISSIONINFO', zh='应用获取的危险权限信息', en='Application\'s dangerous permission information')
-        Info(title=get_value('ANDROIDDANGEROUSPERMISSIONTITLE'), level=3, info=get_value('ANDROIDDANGEROUSPERMISSIONINFO'),
+        set_values_for_key(key='ANDROIDDANGEROUSPERMISSIONTITLE', zh='危险权限信息',
+                           en='Dangerous Permission information')
+        set_values_for_key(key='ANDROIDDANGEROUSPERMISSIONINFO', zh='应用获取的危险权限信息',
+                           en='Application\'s dangerous permission information')
+        Info(title=get_value('ANDROIDDANGEROUSPERMISSIONTITLE'), level=3,
+             info=get_value('ANDROIDDANGEROUSPERMISSIONINFO'),
              result=result).description()
 
     if len(coreArray) > 0:
-        result = ''
-        for (p, name, description) in coreArray:
-            result += f'{p}: {name}: {description}\n'
+        result = ''.join(
+            f'{p}: {name}: {description}\n'
+            for p, name, description in coreArray
+        )
         result = result.rstrip()
         set_values_for_key(key='ANDROIDCOREPERMISSIONTITLE', zh='核心权限信息', en='Core Permission information')
-        set_values_for_key(key='ANDROIDCOREPERMISSIONINFO', zh='应用获取的核心权限信息', en='Application\'s core permission information')
+        set_values_for_key(key='ANDROIDCOREPERMISSIONINFO', zh='应用获取的核心权限信息',
+                           en='Application\'s core permission information')
         Info(title=get_value('ANDROIDCOREPERMISSIONTITLE'), level=2, info=get_value('ANDROIDCOREPERMISSIONINFO'),
              result=result).description()
 
     if len(specialArray) > 0:
-        result = ''
-        for (p, name, description) in specialArray:
-            result += f'{p}: {name}: {description}\n'
+        result = ''.join(
+            f'{p}: {name}: {description}\n'
+            for p, name, description in specialArray
+        )
         result = result.rstrip()
         set_values_for_key(key='ANDROIDSPECIALPERMISSIONTITLE', zh='特殊权限信息', en='Special Permission information')
-        set_values_for_key(key='ANDROIDSPECIALPERMISSIONINFO', zh='应用获取的特殊权限信息', en='Application\'s special permission information')
+        set_values_for_key(key='ANDROIDSPECIALPERMISSIONINFO', zh='应用获取的特殊权限信息',
+                           en='Application\'s special permission information')
         Info(title=get_value('ANDROIDSPECIALPERMISSIONTITLE'), level=1, info=get_value('ANDROIDSPECIALPERMISSIONINFO'),
              result=result).description()
 
     if len(newPermissionList) > 0:
-        result = ''
-        for p in newPermissionList:
-            result += f'{p}\n'
+        result = ''.join(f'{p}\n' for p in newPermissionList)
         result = result.rstrip()
         set_values_for_key(key='ANDROIDPERMISSIONTITLE', zh='其他权限信息', en='Other Permission information')
-        set_values_for_key(key='ANDROIDPERMISSIONINFO', zh='应用获取的其他权限信息', en='Application\'s other permission information')
+        set_values_for_key(key='ANDROIDPERMISSIONINFO', zh='应用获取的其他权限信息',
+                           en='Application\'s other permission information')
         Info(title=get_value('ANDROIDPERMISSIONTITLE'), level=0, info=get_value('ANDROIDPERMISSIONINFO'),
              result=result).description()
 
@@ -190,7 +196,7 @@ def apkInfo(filePath):
     set_values_for_key(key='ANDROIDVERSION', zh='\n  版本号: ', en='\n  Version: ')
     set_values_for_key(key='ANDROIDVERSIONNAME', zh='\n  版本名: ', en='\n  Version name: ')
 
-    yml = filePath + '/apktool.yml'
+    yml = f'{filePath}/apktool.yml'
     result = ''
     with open(yml, mode='r') as f:
         io = f.read()
@@ -211,10 +217,8 @@ def apkInfo(filePath):
 
 
 def apkPermissionList(root):
-    permissionList = set()
     ps = root.getElementsByTagName('uses-permission')
-    for p in ps:
-        permissionList.add(p.getAttribute('android:name'))
+    permissionList = {p.getAttribute('android:name') for p in ps}
     ps = root.getElementsByTagName('permission')
     for p in ps:
         permissionList.add(p.getAttribute('android:name'))
@@ -315,25 +319,25 @@ def apkPermissionLevel(permissionList):
     specialArray = []
     newPermissionList = permissionList.copy()
     for p in permissionList:
-        for key in normal.keys():
+        for key in normal:
             names = key.split('(')
             if names[-1].strip().replace(')', '') in p.split('.')[-1]:
                 normalArray.append((p, names[0], normal[key]))
                 newPermissionList.remove(p)
                 break
-        for key in dangerous.keys():
+        for key in dangerous:
             names = key.split('(')
             if names[-1].strip().replace(')', '') in p.split('.')[-1]:
                 dangerousArray.append((p, names[0], dangerous[key]))
                 newPermissionList.remove(p)
                 break
-        for key in core.keys():
+        for key in core:
             names = key.split('(')
             if names[-1].strip().replace(')', '') in p.split('.')[-1]:
                 coreArray.append((p, names[0], core[key]))
                 newPermissionList.remove(p)
                 break
-        for key in sepical.keys():
+        for key in sepical:
             names = key.split('(')
             if names[-1].strip().replace(')', '') in p.split('.')[-1]:
                 specialArray.append((p, names[0], sepical[key]))

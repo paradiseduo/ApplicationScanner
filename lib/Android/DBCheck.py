@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class DBCheck(Base):
@@ -16,7 +16,9 @@ class DBCheck(Base):
         LEVEL = 2
         INFO = get_value('DBCHECHINFO')
 
-        strline = cmdString('grep -r "Landroid/content/Context;->openOrCreateDatabase" ' + self.appPath)
+        strline = cmdString(
+            f'grep -r "Landroid/content/Context;->openOrCreateDatabase" {self.appPath}'
+        )
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
@@ -34,7 +36,7 @@ class DBCheck(Base):
                             if 'const/4' in ll and v in ll:
                                 value = ll.strip().split(' ')[-1]
                                 if value != '0x0':
-                                    result = name + ' : ' + str(count - i)
+                                    result = f'{name} : {str(count - i)}'
                                     if result not in results:
                                         results.append(result)
                                 break

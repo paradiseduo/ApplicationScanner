@@ -1,8 +1,8 @@
+from lib.translation import *
 from ..Base import Base
+from ..apk import register
 from ..info import Info
 from ..tools import *
-from ..apk import register
-from lib.translation import *
 
 
 class FragmentCheck(Base):
@@ -16,17 +16,17 @@ class FragmentCheck(Base):
         LEVEL = 3
         INFO = get_value('FRAGMENTCHECHINFO')
 
-        strline = cmdString('grep -r "Landroid/preference/PreferenceActivity" ' + self.appPath)
+        strline = cmdString(
+            f'grep -r "Landroid/preference/PreferenceActivity" {self.appPath}'
+        )
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
             with open(path, 'r') as f:
                 lines = f.readlines()
-                index = 0
                 count = len(lines)
                 isExp = True
-                for line in lines:
-                    index += 1
+                for index, line in enumerate(lines, start=1):
                     if '.method protected isValidFragment(Ljava/lang/String;)Z' in line:
                         for i in range(index, count):
                             p = lines[i]

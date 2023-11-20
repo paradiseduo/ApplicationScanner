@@ -1,8 +1,9 @@
 import os
-from ..Base import Base
-from ..info import Info
-from ..apk import register
+
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
 
 
 class FFmpegCheck(Base):
@@ -16,12 +17,12 @@ class FFmpegCheck(Base):
         LEVEL = 1
         INFO = get_value('FFMPEGCHECHINFO')
 
-        strline = 'find ' + self.appPath + ' -name *.so | grep "ffmpeg\|FFmpeg"'
+        strline = f'find {self.appPath}' + ' -name *.so | grep "ffmpeg\|FFmpeg"'
         arr = os.popen(strline).readlines()
         versions = []
         result = ''
         for item in arr:
-            strline = "strings  " + item[:-1] + " | grep 'FFmpeg version'"
+            strline = f"strings  {item[:-1]} | grep 'FFmpeg version'"
             out = os.popen(strline).readlines()
             for line in out:
                 if line.startswith('FFmpeg version'):
@@ -29,7 +30,7 @@ class FFmpegCheck(Base):
                     if v not in versions:
                         versions.append(v)
                         filePath = '/'.join(item[:-1].split('/')[-2:])
-                        result += filePath + ': ' + v + '\n'
+                        result += f'{filePath}: {v}' + '\n'
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result=result).description()
 
 

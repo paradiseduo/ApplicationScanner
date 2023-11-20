@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-from lib.tools import *
 from rich.table import Table
+
+from lib.tools import *
 from lib.translation import *
 
 
@@ -36,13 +37,16 @@ class Info:
                 levelColor = 'cyan'
             elif self.level == 2:
                 levelColor = 'magenta'
-            elif self.level == 3 or self.level == 4:
+            elif self.level in [3, 4]:
                 levelColor = 'red'
             table = Table(show_header=False, show_lines=True)
             table.add_column("Title", justify="left")
             table.add_column("Result", justify="left")
-            table.add_row(get_value('TESTITEMS'), '[bold green]' + self.title + '[/bold green]')
-            table.add_row(get_value('CASEDESC'), '[bold yellow]' + self.info + '[/bold yellow]')
-            table.add_row(get_value('LEVELDANGER'), '[bold ' + levelColor + ']' + level[self.level] + '[/bold ' + levelColor + ']')
-            table.add_row(get_value('PROJECTDESC'), '[bold]' + self.result + '[/bold]')
+            table.add_row(get_value('TESTITEMS'), f'[bold green]{self.title}[/bold green]')
+            table.add_row(get_value('CASEDESC'), f'[bold yellow]{self.info}[/bold yellow]')
+            table.add_row(
+                get_value('LEVELDANGER'),
+                f'[bold {levelColor}]{level[self.level]}[/bold {levelColor}]',
+            )
+            table.add_row(get_value('PROJECTDESC'), f'[bold]{self.result}[/bold]')
             console.print(table)

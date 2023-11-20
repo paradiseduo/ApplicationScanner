@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class IPCheck(Base):
@@ -16,7 +16,8 @@ class IPCheck(Base):
         LEVEL = 1
         INFO = get_value('ANDROIDIPCHECHINFO')
 
-        strline = cmdString("grep -r -E -o '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' " + self.appPath)
+        strline = cmdString(
+            "grep -r -E -o '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' " + self.appPath)
         out = os.popen(strline).readlines()
         ips = []
         for item in out:

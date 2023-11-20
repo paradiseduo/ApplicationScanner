@@ -1,6 +1,3 @@
-import traceback
-
-
 class Base:
     def __init__(self, appPath, appBinPath="", **kwargs):
         self._appPath = appPath

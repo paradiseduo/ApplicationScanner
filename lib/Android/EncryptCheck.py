@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class EncryptCheck(Base):
@@ -17,7 +17,8 @@ class EncryptCheck(Base):
         INFO = get_value('ENCRYPTCHECHINFO')
 
         strline = cmdString(
-            'grep -r "Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;" ' + self.appPath)
+            f'grep -r "Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;" {self.appPath}'
+        )
         paths = getSmalis(os.popen(strline).readlines())
         results = []
         for path in paths:
@@ -26,7 +27,7 @@ class EncryptCheck(Base):
                 lines.reverse()
                 count = len(lines)
                 name = getFileName(path)
-                for i in range(0, count):
+                for i in range(count):
                     line = lines[i]
                     if 'Ljavax/crypto/Cipher;->getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;' in line:
                         start = line.find('{') + 1
@@ -34,10 +35,10 @@ class EncryptCheck(Base):
                         v = line[start:end]
                         for j in range(i, count):
                             ll = lines[j]
-                            if 'const-string ' + v in ll:
+                            if f'const-string {v}' in ll:
                                 s = ll.strip().split(', ')[-1].replace('"', '')
-                                if 'ECB' in s or 'DES' == s or 'AES' == s:
-                                    result = name + ' : ' + str(count - i)
+                                if 'ECB' in s or s == 'DES' or s == 'AES':
+                                    result = f'{name} : {str(count - i)}'
                                     if result not in results:
                                         results.append(result)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()

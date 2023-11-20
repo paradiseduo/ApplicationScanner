@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class ClipboardCheck(Base):
@@ -28,7 +28,7 @@ class ClipboardCheck(Base):
                 for i in range(0, count):
                     line = lines[i]
                     if 'ClipboardManager;->setPrimaryClip' in line or 'ClipboardManager;->setText' in line:
-                        result = name + ' : ' + str(count - i)
+                        result = f'{name} : {str(count - i)}'
                         if result not in results:
                             results.append(result)
         Info(key=self.__class__, title=TITLE, level=LEVEL, info=INFO, result='\n'.join(results)).description()

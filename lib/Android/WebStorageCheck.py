@@ -1,8 +1,8 @@
-from ..Base import Base
-from ..info import Info
-from ..apk import register
-from ..tools import *
 from lib.translation import *
+from ..Base import Base
+from ..apk import register
+from ..info import Info
+from ..tools import *
 
 
 class WebStorageCheck(Base):
@@ -16,7 +16,7 @@ class WebStorageCheck(Base):
         LEVEL = 1
         INFO = get_value('WEBSTORAGECHECHINFO')
 
-        strline = cmdString("find " + self.appPath + " -name '*.js'")
+        strline = cmdString(f"find {self.appPath} -name '*.js'")
         out = os.popen(strline).readlines()
         jsfiles = []
         for line in out:
