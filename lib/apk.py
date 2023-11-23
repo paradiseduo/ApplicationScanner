@@ -8,6 +8,7 @@ from pathlib import Path
 from lib.info import Info
 from lib.tools import *
 from lib.translation import *
+from . import Android # 执行导入包到 scanners
 
 apktool = str(Path(__file__).parents[1] / 'ThirdTools/apktool.jar')
 apksigner = str(Path(__file__).parents[1] / 'ThirdTools/apksigner.jar')
