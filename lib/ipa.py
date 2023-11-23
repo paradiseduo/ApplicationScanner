@@ -11,7 +11,6 @@ import lief
 from lib.info import Info
 from lib.tools import *
 from lib.translation import *
-from . import iOS # 执行导入包到 scanners
 
 scanners = {}
 
@@ -29,6 +28,7 @@ def import_scanners(scanners_imports):
     for runner_import in scanners_imports:
         __import__(runner_import)
 
+from . import iOS # 执行导入包到 scanners
 
 def ipaScan(filePath, save):
     # 解压ipa文件
