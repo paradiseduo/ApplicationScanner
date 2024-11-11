@@ -117,11 +117,15 @@ def permissionAndExport(filePath):
          result=(get_value('ANDROIDPACKAGENAME') + package)).description()
 
     permissionList = apkPermissionList(root)
-    normalArray, dangerousArray, coreArray, specialArray, newPermissionList = apkPermissionLevel(permissionList)
+    normalArray, dangerousArray, coreArray, specialArray, newPermissionList, othersArray = apkPermissionLevel(permissionList)
     if len(normalArray) > 0:
         result = ''.join(
             f'{p}: {name}: {description}\n'
             for p, name, description in normalArray
+        )
+        result += ''.join(
+            f'{p}: {name}: {description}\n'
+            for p, name, description in othersArray
         )
         result = result.rstrip()
         set_values_for_key(key='ANDROIDNORMALPERMISSIONTITLE', zh='一般权限信息', en='Normal Permission information')
@@ -226,7 +230,7 @@ def apkPermissionList(root):
     return permissionList
 
 
-def apkPermissionLevel(permissionList):
+def apkPermissionLevel(permission_list):
     normal = {
         '访问额外位置 (ACCESS_LOCATION_EXTRA_COMMANDS)': '允许应用软件访问额外的位置提供指令',
         '获取网络连接(ACCESS_NETWORK_STATE)': '允许获取网络连接信息',
@@ -265,7 +269,14 @@ def apkPermissionLevel(permissionList):
         '振动(VIBRATE)': '允许应用使手机振动',
         '唤醒锁(WAKE_LOCK)': '允许应用持有系统唤醒锁，防止进程进入睡眠状态或息屏',
         '修改帐户同步设置(WRITE_SYNC_SETTINGS)': '允许该应用修改某个帐户的同步设置，包括启用和停用同步',
-        '读取应用列表(QUERY_ALL_PACKAGES)': '允许应用读取手机上的应用列表，仅适用于target sdk大于等于30以上的Android设备和应用软件'
+        '读取应用列表(QUERY_ALL_PACKAGES)': '允许应用读取手机上的应用列表，仅适用于target sdk大于等于30的Android设备和应用软件',
+        '读取音频文件(READ_MEDIA_AUDIO)':'允许应用访问设备上的音频文件，仅适用于target sdk 大于等于33的Android设备和应用软件',
+        '发送通知(POST_NOTIFICATIONS)':'允许应用发布通知，仅适用于target sdk 大于等于33的Android设备和应用软件',
+        '读取图像文件(READ_MEDIA_IMAGES)': '允许应用访问设备上的图像文件，仅适用于target sdk 大于等于33的Android设备和应用软件',
+        '读取用户选择的视觉媒体(READ_MEDIA_VISUAL_USER_SELECTED)': '允许应用读取用户选择的视觉媒体，仅适用于target sdk 大于等于33的Android设备和应用软件',
+        '录制视频(RECORD_VIDEO)': '允许应用录制视频，仅适用于target sdk 大于等于33的Android设备和应用软件',
+        '读取视频文件(READ_MEDIA_VIDEO)': '允许应用读取视频文件，仅适用于target sdk 大于等于33的Android设备和应用软件',
+        '控制闪光灯(FLASHLIGHT)': '允许应用访问设备的闪光灯，仅适用于target sdk 大于等于33的Android设备和应用软件',
     }
     dangerous = {
         '读取日历(READ_CALENDAR)': '读取日历内容',
@@ -288,7 +299,10 @@ def apkPermissionLevel(permissionList):
         '从您的媒体收藏中读取位置信息(ACCESS_MEDIA_LOCATION)': '允许该应用从您的媒体收藏中读取位置信息',
         '接听来电(ANSWER_PHONE_CALLS)': '允许该应用接听来电',
         '继续进行来自其他应用的通话(ACCEPT_HANDOVER)': '允许该应用继续进行在其他应用中发起的通话',
-        '身体活动(ACTIVITY_RECOGNITION)': '获取您的身体活动数据'
+        '身体活动(ACTIVITY_RECOGNITION)': '获取您的身体活动数据',
+        '修改安全设置(WRITE_SECURE_SETTINGS)': '允许应用修改系统的安全设置',
+        '获取任务列表(GET_TASKS)': '允许应用访问正在运行的任务和活动的列表',
+        '写入媒体文件(WRITE_MEDIA_STORAGE)': '允许应用对媒体存储进行写操作',
     }
     core = {
         '使用摄像头(CAMERA)': '允许应用软件调用设备的摄像头进行拍摄、录像',
@@ -312,14 +326,32 @@ def apkPermissionLevel(permissionList):
         '读取应用使用情况(PACKAGE_USAGE_STATS)': '允许应用读取本机的应用使用情况 ',
         '请求安装应用(REQUEST_INSTALL_PACKAGES)': '允许应用安装其他应用 ',
         '访问所有文件(MANAGE_EXTERNAL_STORAGE)': '允许应用访问分区存储模式下SD卡上的所有文件',
-        '应用软件列表(GET_INSTALLED_APPS)': '允许应用读取手机上的应用软件列表'
+        '应用软件列表(GET_INSTALLED_APPS)': '允许应用读取手机上的应用软件列表',
+        '接收手机解锁通知(RECEIVE_USER_PRESENT)': '允许应用监听手机解锁通知',
+        '多用户交互(INTERACT_ACROSS_USERS)': '允许应用访问多用户交互功能',
+        '跨用户交互(INTERACT_ACROSS_USERS_FULL)': '允许应用访问跨用户交互功能',
+        '挂载和卸载文件系统(MOUNT_UNMOUNT_FILESYSTEMS)': '允许应用挂载和卸载文件系统',
+        '访问高采样率传感器(HIGH_SAMPLING_RATE_SENSORS)': '允许应用访问高采样率传感器的数据',
+    }
+    others = {
+        'com.huawei.': '华为手机权限',
+        'com.vivo.': 'vivo手机权限',
+        'com.coloros.': 'oppo手机权限',
+        'com.asus.': '华硕手机权限',
+        'com.meizu.': '魅族手机权限',
+        'com.oppo.': 'oppo手机权限',
+        'com.hihonor.': '荣耀手机权限',
+        'com.sec.': '三星手机权限',
+        'oplus.': '一加手机权限',
+        'com.heytap.': 'oppo手机权限',
     }
     normalArray = []
     dangerousArray = []
     coreArray = []
     specialArray = []
-    newPermissionList = permissionList.copy()
-    for p in permissionList:
+    othersArray = []
+    newPermissionList = permission_list.copy()
+    for p in permission_list:
         for key in normal:
             names = key.split('(')
             if names[-1].strip().replace(')', '') in p.split('.')[-1]:
@@ -344,4 +376,9 @@ def apkPermissionLevel(permissionList):
                 specialArray.append((p, names[0], sepical[key]))
                 newPermissionList.remove(p)
                 break
-    return normalArray, dangerousArray, coreArray, specialArray, newPermissionList
+        for key in others:
+            if str(p).startswith(key):
+                othersArray.append((p, '', others[key]))
+                if p in newPermissionList:
+                    newPermissionList.remove(p)
+    return set(normalArray), set(dangerousArray), set(coreArray), set(specialArray), set(newPermissionList), set(othersArray)
